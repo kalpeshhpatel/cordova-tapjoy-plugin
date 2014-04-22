@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="org.apache.cordova.plugin.TapjoyPlugin"
+        version="1.0">
+
+    <name>Cordova Tapjoy Plugin</name>
+    <description>Cordova Tapjoy plugin</description>
+    <author>Kalpesh Patel</author>
+    <license>GPLv2</license>
+    <keywords>cordova,tapjoy,monetization</keywords>
+
+    <engines>
+        <engine name="cordova" version=">=3.0" />
+    </engines>
+
+    <js-module src="www/tapjoy.js" name="Tapjoy">
+        <clobbers target="Tapjoy" />
+    </js-module>
+
+    <dependency id="org.apache.cordova.device" version=">=0.2.8"/>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="TapjoyPlugin">
+                <param name="android-package" value="org.apache.cordova.plugin.TapjoyPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.tapjoy.TJCOffersWebView" />
+            <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.tapjoy.TapjoyFullScreenAdWebView" />
+            <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.tapjoy.TapjoyDailyRewardAdWebView" />
+            <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.tapjoy.TapjoyVideoView" />
+            <activity android:configChanges="orientation|keyboardHidden|screenSize" android:hardwareAccelerated="true" android:name="com.tapjoy.TJAdUnitView" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+            <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.tapjoy.mraid.view.ActionHandler" />
+            <activity android:configChanges="orientation|keyboardHidden|screenSize" android:name="com.tapjoy.mraid.view.Browser" />
+        </config-file>
+
+        <source-file src="src/android/libs/tapjoyconnectlibrary.jar" target-dir="libs/" />
+        <source-file src="src/android/org/apache/cordova/plugin/TapjoyPlugin.java" target-dir="src/org/apache/cordova/plugin/" />
+
+    </platform>
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="TapjoyPlugin">
+                <param name="ios-package" value="TapjoyPlugin" />
+            </feature>
+        </config-file>
+
+        <source-file src="src/ios/TapjoyPlugin.m" />
+        <source-file src="src/ios/TapjoyEventPlugin.m" />
+
+        <header-file src="src/ios/TapjoyPlugin.h" />
+        <header-file src="src/ios/TapjoyEventPlugin.h" />
+
+        <resource-file src="src/ios/Framework/Tapjoy.framework/Resources/TapjoyResources.bundle" />
+        <framework src="src/ios/Framework/Tapjoy.framework" custom="true"/>
+        <framework src="Security.framework"/>
+        <framework src="CoreData.framework" />
+        <framework src="EventKit.framework" />
+        <framework src="EventKitUI.framework"/>
+        <framework src="libsqlite3.0.dylib" />
+        <framework src="libxml2.dylib"/>
+        <framework src="libz.dylib"/>
+        <framework src="MapKit.framework" />
+        <framework src="MessageUI.framework"/>
+        <framework src="Social.framework" weak="true"/>
+        <framework src="StoreKit.framework" weak="true"/>
+        <framework src="Twitter.framework" weak="true"/>
+        <framework src="CoreTelephony.framework" weak="true"/>
+        <framework src="CoreMotion.framework"/>
+        <framework src="AdSupport.framework" weak="true"/>
+        <framework src="CoreLocation.framework" />
+        <framework src="ImageIO.framework"/>
+        <framework src="OpenAL.framework" />
+        <framework src="AssetsLibrary.framework" />
+        <framework src="UIKit.framework" weak="true"/>
+        <framework src="Foundation.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="AddressBook.framework" />
+        <framework src="AddressBookUI.framework" />
+        <framework src="AudioToolbox.framework" />
+        <framework src="AVFoundation.framework" weak="true"/>
+        <framework src="CFNetwork.framework" />
+        <framework src="CoreLocation.framework" />
+        <framework src="MediaPlayer.framework" />
+        <framework src="QuartzCore.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="MobileCoreServices.framework"/>
+        <framework src="CoreMedia.framework" weak="true"/>
+
+    </platform>
+
+</plugin>

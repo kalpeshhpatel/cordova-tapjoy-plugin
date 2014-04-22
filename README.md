@@ -1,4 +1,4 @@
-cordova-tapjoy-plugin
-=====================
+cordova-tapjoy
+==============
 
-Cordova plugin for Tapjoy
+Tapjoy Plugin for cordova
