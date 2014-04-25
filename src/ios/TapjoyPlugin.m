@@ -16,25 +16,19 @@
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_CONNECT_SUCCESS object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_CONNECT_FAILED object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_FEATURED_APP_RESPONSE_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_DAILY_REWARD_RESPONSE_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION_ERROR object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_DAILY_REWARD_RESPONSE_NOTIFICATION_ERROR object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_OFFERS_RESPONSE_NOTIFICATION_ERROR object:nil];
 
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tjcConnectSuccess:) name:TJC_CONNECT_SUCCESS object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tjcConnectFail:) name:TJC_CONNECT_FAILED object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFeaturedAppResponse:)
-																name:TJC_FEATURED_APP_RESPONSE_NOTIFICATION 
-															 object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 														  selector:@selector(getUpdatedPoints:) 
 																name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION 
@@ -49,9 +43,6 @@
 															 object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFullScreenAdResponse:)
                                                                 name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION
-                                                             object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDailyRewardAdResponse:)
-                                                                name:TJC_DAILY_REWARD_RESPONSE_NOTIFICATION
                                                              object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 														  selector:@selector(getUpdatedPointsError:)
@@ -69,11 +60,6 @@
                                                           selector:@selector(getFullScreenAdError:)
                                                                 name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION_ERROR
                                                              object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-                                                          selector:@selector(getDailyRewardAdError:)
-                                                                name:TJC_DAILY_REWARD_RESPONSE_NOTIFICATION_ERROR
-                                                             object:nil];
-
     [[NSNotificationCenter defaultCenter] addObserver:self
                                                           selector:@selector(showOffersError:)
                                                                 name:TJC_OFFERS_RESPONSE_NOTIFICATION_ERROR
@@ -86,7 +72,7 @@
     _displayAdSize = TJC_DISPLAY_AD_SIZE_320X50;
     _displayAdFrame = CGRectMake(0, 0, 320, 50);
     
-	[Tapjoy setPlugin:@"phonegap"];
+    [[Tapjoy sharedTapjoyConnect] setPlugin:@"phonegap"];
     
     [self.commandDelegate runInBackground:^{
         if([self hasKeyFlag]){
@@ -109,7 +95,7 @@
 - (void)setFlagKeyValue:(CDVInvokedUrlCommand*)command
 {
     NSString *key = [command.arguments objectAtIndex:0];
-    NSString *value = [command.arguments objectAtIndex:1];
+	id value = [command.arguments objectAtIndex:1];
     
 	if (!_keyFlagValueDict)
 		_keyFlagValueDict = [[NSMutableDictionary alloc] init];
@@ -183,46 +169,6 @@
 }
 
 
-
-- (void)getFeaturedApp:(CDVInvokedUrlCommand*)command
-{
-	self.featuredAppCallbackID = command.callbackId;
-	
-	[Tapjoy getFeaturedApp];
-}
-
-
-- (void)getFeaturedAppWithCurrencyID:(CDVInvokedUrlCommand*)command
-{
-	self.featuredAppCallbackID = command.callbackId;
-	
-	NSString *currencyID = [command.arguments objectAtIndex:0];
-	
-	[Tapjoy getFeaturedAppWithCurrencyID:currencyID];
-}
-
-
-- (void)setFeaturedAppDisplayCount:(CDVInvokedUrlCommand*)command
-{
-	NSString *displayCountString = [command.arguments objectAtIndex:0];
-	int displayCount = [displayCountString intValue];
-	
-	[Tapjoy setFeaturedAppDisplayCount:displayCount];
-}
-
-
-- (void)showFeaturedAppFullScreenAd:(CDVInvokedUrlCommand*)command
-{
-	[Tapjoy showFeaturedAppFullScreenAd];
-}
-
-
-- (void)initVideoAd:(CDVInvokedUrlCommand*)command
-{
-	[Tapjoy initVideoAdWithDelegate:self];
-}
-
-
 - (void)setVideoCacheCount:(CDVInvokedUrlCommand*)command
 {
 	NSString *displayCountString = [command.arguments objectAtIndex:0];
@@ -250,28 +196,6 @@
 - (void)showFullScreenAd:(CDVInvokedUrlCommand*)command
 {
     [Tapjoy showFullScreenAd];
-}
-
-- (void)getDailyRewardAd:(CDVInvokedUrlCommand*)command
-{
-    self.dailyRewardAdCallbackID = command.callbackId;
-    
-    [Tapjoy getDailyRewardAd];
-}
-
-- (void)getDailyRewardAdWithCurrencyID:(CDVInvokedUrlCommand*)command
-{
-    self.dailyRewardAdCallbackID = command.callbackId;
-    
-    NSString *currencyID = [command.arguments objectAtIndex:0];
-    
-    [Tapjoy getDailyRewardAdWithCurrencyID:currencyID];
-    
-}
-
-- (void)showDailyRewardAd:(CDVInvokedUrlCommand*)command
-{
-    [Tapjoy showDailyRewardAd];
 }
 
 - (void)cacheVideos:(CDVInvokedUrlCommand*)command
@@ -426,23 +350,6 @@
 }
 
 
-- (void)getFeaturedAppResponse:(NSNotification*)notifyObj
-{
-    // TODO: fix these lines
-	// notifyObj will be returned as Nil in case of internet error or unavailibity of featured App 
-	// or its Max Number of count has exceeded its limit
-//	TJCFeaturedAppModel *featuredApp = notifyObj.object;
-//	NSLog(@"Featured App Name: %@, Cost: %@, Description: %@, Amount: %d", featuredApp.name, featuredApp.cost, featuredApp.description, featuredApp.amount);
-//	NSLog(@"Featured App Image URL %@ ", featuredApp.iconURL);
-	
-	NSString *stringToReturn = @"Featured App Successful";
-	
-	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK 
-																	  messageAsString:stringToReturn];
-	
-	[self writeJavascript:[pluginResult toSuccessCallbackString:self.featuredAppCallbackID]];
-}
-
 - (void)getFullScreenAdResponse:(NSNotification*)notifyObj
 {
 	NSString *stringToReturn = @"Full Screen Ad Successful";
@@ -461,30 +368,6 @@
                                                       messageAsString:stringToReturn];
 	
 	[self writeJavascript:[pluginResult toErrorCallbackString:self.fullScreenAdCallbackID]];
-}
-
-- (void)getDailyRewardAdResponse:(NSNotification*)notifyObj
-{
-
-	NSString *stringToReturn = @"Daily Reward Ad Successful";
-	
-	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
-	
-	[self writeJavascript:[pluginResult toSuccessCallbackString:self.dailyRewardAdCallbackID]];
-}
-
-
-
-- (void)getDailyRewardAdError:(NSNotification*)notifyObj
-{
-    NSString *stringToReturn = @"Daily Reward Ad Failed";
-	
-	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
-	
-	[self writeJavascript:[pluginResult toErrorCallbackString:self.dailyRewardAdCallbackID]];
-    
 }
      
 - (void)showOffersError:(NSNotification*)notifyObj
@@ -610,9 +493,14 @@
     // Save off callbacks in dict to workaround weird release/crash issues
     TapjoyEventPlugin *tjevt = [TapjoyEventPlugin createEventWithGuid:guid plugin:self];
         [_callbackDict setObject:tjevt forKey:guid];
-    
-    // TODO: allow for string param to be used
-	TJEvent *evt = [TJEvent eventWithName:name delegate:tjevt];
+
+	TJEvent *evt;
+	
+	if(!eventParameter || eventParameter == (id)[NSNull null] || eventParameter.length == 0)
+		evt = [TJEvent eventWithName:name delegate:tjevt];
+	else
+		evt = [TJEvent eventWithName:name value:eventParameter delegate:tjevt];
+	
 	[_eventsDict setObject:evt forKey:guid];
 }
 
@@ -639,6 +527,37 @@
 	[[_eventsDict objectForKey:guid] presentContentWithViewController:viewCntrl];
 }
 
+- (void)enableEventAutoPresent:(CDVInvokedUrlCommand*)command
+{
+	NSString *guid = [command.arguments objectAtIndex:0];
+	id autoPresent = [command.arguments objectAtIndex:1];
+	BOOL autoPresentBool = [autoPresent boolValue];
+	
+	[[_eventsDict objectForKey:guid] setPresentAutomatically:autoPresentBool];
+}
+
+- (void)eventRequestCompleted:(CDVInvokedUrlCommand*)command
+{
+	NSString *guid = [command.arguments objectAtIndex:0];
+	TJEventRequest *request = [_eventRequestDict objectForKey:guid];
+	if(request)
+	{
+		NSLog(@"Sending TJEventRequest completed");
+		[request completed];
+	}
+}
+
+- (void)eventRequestCancelled:(CDVInvokedUrlCommand*)command
+{
+	NSString *guid = [command.arguments objectAtIndex:0];
+	TJEventRequest *request = [_eventRequestDict objectForKey:guid];
+	if(request)
+	{
+		NSLog(@"Sending TJEventRequest cancelled");
+		[request cancelled];
+	}
+}
+
 #pragma mark - Tapjoy Static Event Delegate Methods
 
 - (void)sendEventComplete:(NSString *)guid withContent:(BOOL)contentIsAvailable
@@ -662,29 +581,35 @@
     [self writeJavascript:jsCall];
 }
 
-- (void)contentWillAppear:(NSString *)guid
-{
-    
-}
-
 - (void)contentDidAppear:(NSString *)guid
 {
-    
-}
-
-- (void)contentWillDisappear:(NSString *)guid
-{
-    
+	NSString *jsCall = [NSString stringWithFormat: @"Tapjoy.eventContentDidAppear('%@');", guid];
+    [self writeJavascript:jsCall];
 }
 
 - (void)contentDidDisappear:(NSString *)guid
 {
-    
+	NSString *jsCall = [NSString stringWithFormat: @"Tapjoy.eventContentDidDisappear('%@');", guid];
+    [self writeJavascript:jsCall];
 }
 
 - (void)event:(NSString *)guid didRequestAction:(TJEventRequest*)request
 {
-    
+	if (!_eventRequestDict)
+		_eventRequestDict = [[NSMutableDictionary alloc] init];
+	
+	[_eventRequestDict setObject:request forKey:guid];
+	
+	NSString *jsCall = [NSString stringWithFormat: @"Tapjoy.eventDidRequestAction('%@', '%u', '%@', '%d');", guid, request.type, request.identifier, request.quantity];
+    [self writeJavascript:jsCall];
+}
+
+// event callbacks unused by plugins
+- (void)contentWillAppear:(NSString *)guid
+{
+}
+- (void)contentWillDisappear:(NSString *)guid
+{
 }
 
 

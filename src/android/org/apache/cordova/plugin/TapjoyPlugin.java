@@ -26,10 +26,7 @@ import com.tapjoy.TJEventRequest;
 import com.tapjoy.TapjoyAwardPointsNotifier;
 import com.tapjoy.TapjoyConnectNotifier;
 import com.tapjoy.TapjoyConstants;
-import com.tapjoy.TapjoyDailyRewardAdNotifier;
 import com.tapjoy.TapjoyDisplayAdNotifier;
-import com.tapjoy.TapjoyFeaturedAppNotifier;
-import com.tapjoy.TapjoyFeaturedAppObject;
 import com.tapjoy.TapjoyFullScreenAdNotifier;
 import com.tapjoy.TapjoyLog;
 import com.tapjoy.TapjoyNotifier;
@@ -49,8 +46,9 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 	
 	// map plugin event to native event guid
 	private static Hashtable<String, String> guidMap = null;
+	private static Hashtable<String, TJEventRequest> eventRequestMap = null;
 	
-	private Hashtable<String, String> connectFlags = null;
+	private Hashtable<String, Object> connectFlags = null;
 	
 	@Override
 	public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) {
@@ -63,9 +61,15 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 			if (action.equals("setFlagKeyValue"))
 			{
 				if (connectFlags == null)
-					connectFlags = new Hashtable<String, String>();
+					connectFlags = new Hashtable<String, Object>();
 				
-				connectFlags.put(data.getString(0), data.getString(1));
+				Object o = data.get(1);
+				
+				// data.get() returns a JSONObject for complex types. For now we assume this is a dictionary to be converted to hashtable (ex.segmentation params)
+				if(o instanceof JSONObject){
+					o = convertJSONToTable((JSONObject)o);
+				}
+				connectFlags.put(data.getString(0), o);
 			}
 			else
 			if (action.equals("requestTapjoyConnect"))
@@ -178,56 +182,8 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 				});
 			}
 			//--------------------------------------------------------------------------------
-			// FEATURED AD and FULL SCREEN AD RELATED
+			// FULL SCREEN AD RELATED
 			//--------------------------------------------------------------------------------
-			else
-			if (action.equals("getFeaturedApp"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().getFeaturedApp(new TapjoyFeaturedAppNotifier()
-				{
-					@Override
-					public void getFeaturedAppResponseFailed(String error)
-					{
-						callbackContext.error(error);
-					}
-					
-					@Override
-					public void getFeaturedAppResponse(TapjoyFeaturedAppObject featuredAppObject)
-					{
-						callbackContext.success();
-					}
-				});
-			}
-			else
-			if (action.equals("getFeaturedAppWithCurrencyID"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().getFeaturedAppWithCurrencyID(data.getString(0), new TapjoyFeaturedAppNotifier()
-				{
-					@Override
-					public void getFeaturedAppResponseFailed(String error)
-					{
-						callbackContext.error(error);
-					}
-					
-					@Override
-					public void getFeaturedAppResponse(TapjoyFeaturedAppObject featuredAppObject)
-					{
-						callbackContext.success();
-					}
-				});
-			}
-			else
-			if (action.equals("setFeaturedAppDisplayCount"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().setFeaturedAppDisplayCount(data.getInt(0));
-				callbackContext.success();
-			}
-			else
-			if (action.equals("showFeaturedAppFullScreenAd"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().showFeaturedAppFullScreenAd();
-				callbackContext.success();
-			}
 			else
 			if (action.equals("getFullScreenAd"))
 			{
@@ -271,89 +227,12 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 				callbackContext.success();
 			}
 			//--------------------------------------------------------------------------------
-			// DAILY REWARD RELATED
-			//--------------------------------------------------------------------------------
-			else
-			if (action.equals("getDailyRewardAd"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().getDailyRewardAd(new TapjoyDailyRewardAdNotifier()
-				{
-					@Override
-					public void getDailyRewardAdResponseFailed(int error)
-					{
-						callbackContext.error(error);
-					}
-					
-					@Override
-					public void getDailyRewardAdResponse()
-					{
-						callbackContext.success();
-					}
-				});
-			}
-			else
-			if (action.equals("getDailyRewardAdWithCurrencyID"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().getDailyRewardAdWithCurrencyID(data.getString(0), new TapjoyDailyRewardAdNotifier()
-				{
-					@Override
-					public void getDailyRewardAdResponseFailed(int error)
-					{
-						callbackContext.error(error);
-					}
-					
-					@Override
-					public void getDailyRewardAdResponse()
-					{
-						callbackContext.success();
-					}
-				});
-			}
-			else
-			if (action.equals("showDailyRewardAd"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().showDailyRewardAd();
-				callbackContext.success();
-			}
-			//--------------------------------------------------------------------------------
 			// VIDEO RELATED
 			//--------------------------------------------------------------------------------
-			else
-			if (action.equals("initVideoAd"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().initVideoAd(new TapjoyVideoNotifier()
-				{
-					
-					@Override
-					public void videoStart()
-					{
-						callbackContext.success();
-					}
-					
-					@Override
-					public void videoError(int statusCode)
-					{
-						callbackContext.error(statusCode);
-					}
-					
-					@Override
-					public void videoComplete()
-					{
-						callbackContext.success();
-					}
-				});
-				
-			}
 			else
 			if (action.equals("setVideoCacheCount"))
 			{
 				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().setVideoCacheCount(data.getInt(0));
-				callbackContext.success();
-			}
-			else
-			if (action.equals("enableVideoCache"))
-			{
-				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().enableVideoCache(data.getBoolean(0));
 				callbackContext.success();
 			}
 			else
@@ -464,7 +343,15 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 			{
 				final String guid = data.getString(0);
 				final String eventName = data.getString(1);
-				final String eventParam = data.getString(2);
+				final String eventParam;
+				
+				if(!data.isNull(2))
+				{
+					eventParam = data.getString(2);
+				}
+				else{
+					eventParam = null;
+				}
 				
 		        cordova.getActivity().runOnUiThread(new Runnable() {
 		            public void run() {
@@ -517,6 +404,60 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 						}
 					}
 				});
+			}
+			else
+			if (action.equals("enableEventAutoPresent"))
+			{
+				final String guid = data.getString(0);
+				final boolean autoPresent = data.getBoolean(1);
+				
+				cordova.getActivity().runOnUiThread(new Runnable()
+				{
+					public void run()
+					{
+						String androidGuid = getAndroidGuid(guid);
+
+						if (androidGuid != null)
+						{
+							TJEvent evt = TJEventManager.get(androidGuid);
+							evt.enableAutoPresent(autoPresent);
+						}
+					}
+				});
+			}
+			else
+			if (action.equals("sendIAPEvent"))
+			{
+				String name = data.getString(0);
+				float price = (float)data.getDouble(1);
+				int quantity = data.getInt(2);
+				String currencyCode = data.getString(3);
+				
+				com.tapjoy.TapjoyConnect.getTapjoyConnectInstance().sendIAPEvent(name, price, quantity, currencyCode);
+			}
+			else
+			if (action.equals("eventRequestCompleted"))
+			{
+				String guid = data.getString(0);
+
+				TJEventRequest eventRequest = eventRequestMap.get(guid);
+				if(eventRequest != null && eventRequest.callback != null)
+				{
+					TapjoyLog.i(TAG, "sending TJEventRequest completed");
+					eventRequest.callback.completed();
+				}
+			}
+			else
+			if (action.equals("eventRequestCancelled"))
+			{
+				String guid = data.getString(0);
+				
+				TJEventRequest eventRequest = eventRequestMap.get(guid);
+				if(eventRequest != null && eventRequest.callback != null)
+				{
+					TapjoyLog.i(TAG, "sending TJEventRequest cancelled");
+					eventRequest.callback.cancelled();
+				}
 			}
 			//--------------------------------------------------------------------------------
 			//--------------------------------------------------------------------------------
@@ -630,19 +571,26 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 	public void contentDidShow(TJEvent event)
 	{
 		TapjoyLog.i(TAG, "contentDidShow");
+		webView.sendJavascript("Tapjoy.eventContentDidAppear('" + guidMap.get(event.getGUID()) + "');");
 	}
 	
 	public void contentDidDisappear(TJEvent event)
 	{
 		TapjoyLog.i(TAG, "contentDidDisappear");
+		webView.sendJavascript("Tapjoy.eventContentDidDisappear('" + guidMap.get(event.getGUID()) + "');");
 	}
 
 	public void didRequestAction(TJEvent event, TJEventRequest request)
 	{
 		TapjoyLog.i(TAG, "didRequestAction");
 
-		// TODO: Use json encoding
-		String message = guidMap.get(event.getGUID()) + "," + request.type + "," + request.identifier + "," + request.quantity;
+		String guid = guidMap.get(event.getGUID());
+		if(eventRequestMap == null)
+			eventRequestMap = new Hashtable<String, TJEventRequest>();
+
+		eventRequestMap.put(guid, request);
+
+		webView.sendJavascript("Tapjoy.eventDidRequestAction('" + guid + "', '" +  request.type + "', '" + request.identifier + "', '" + request.quantity + "');");
 	}
 	
 	private static String getAndroidGuid(String phoneGapGuid)
@@ -663,5 +611,24 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 		}
 
 		return androidGuid;
+	}
+	
+	private Hashtable<String, Object> convertJSONToTable(JSONObject obj)
+	{
+		Hashtable<String, Object> newTable = new Hashtable<String, Object>();
+		Iterator i = obj.keys();
+		while(i.hasNext())
+		{
+			try
+			{
+				String key = (String)i.next();
+				newTable.put(key, obj.get(key));
+			}
+			catch(JSONException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return newTable;
 	}
 }

@@ -5,7 +5,7 @@ This is phonegap/cordova plugin for integrating [Tapjoy](https://www.tapjoy.com)
 
 This plugin is the same as described [here](http://tech.tapjoy.com/product-overview/available-plugins/phonegap-plugin), but organized as per cordova plugin [specification](http://docs.phonegap.com/en/3.3.0/plugin_ref_spec.md.html#Plugin%20Specification) so as to install it easily.
 
-It supports both **Android** and **iOS** platform.
+It supports both **Android** and **iOS** platform v10.
 
 Installation
 ----------

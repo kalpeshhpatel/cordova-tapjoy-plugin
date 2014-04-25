@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2012 by Tapjoy Inc.
+// Copyright (C) 2014 by Tapjoy Inc.
 //
 // This file is part of the Tapjoy SDK.
 //
@@ -31,14 +31,8 @@
 
 // Full Screen Ad notification is fired after full screen ad data is received from the server.
 #define TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION			@"TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION"
-#define TJC_FEATURED_APP_RESPONSE_NOTIFICATION				@"TJC_FEATURED_APP_RESPONSE_NOTIFICATION"	// Deprecated
 // Error notification for Full Screen Ad.
 #define TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION_ERROR		@"TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION_ERROR"
-
-// Daily reward notification is fired after the ad data is received from the server.
-#define TJC_DAILY_REWARD_RESPONSE_NOTIFICATION				@"TJC_DAILY_REWARD_RESPONSE_NOTIFICATION"
-// Error notification for daily reward ad.
-#define TJC_DAILY_REWARD_RESPONSE_NOTIFICATION_ERROR		@"TJC_DAILY_REWARD_RESPONSE_NOTIFICATION_ERROR"
 
 // Offers notification is fired after the ad data is loaded.
 #define TJC_OFFERS_RESPONSE_NOTIFICATION			@"TJC_OFFERS_RESPONSE_NOTIFICATION"
@@ -64,15 +58,11 @@
 #define TJC_OPTION_CLEAR_SHARED_URL_CACHE		@"TJC_OPTION_CLEAR_SHARED_URL_CACHE"
 #define TJC_OPTION_COLLECT_MAC_ADDRESS			@"TJC_OPTION_COLLECT_MAC_ADDRESS"
 #define TJC_OPTION_DISABLE_GENERIC_ERROR_ALERT  @"TJC_OPTION_DISABLE_GENERIC_ERROR_ALERT"
+#define TJC_OPTION_SEGMENTATION_PARAMS			@"TJC_OPTION_SEGMENTATION_PARAMS"
 
 #define TJC_DISPLAY_AD_SIZE_320X50	@"320x50"
 #define TJC_DISPLAY_AD_SIZE_640X100	@"640x100"
 #define TJC_DISPLAY_AD_SIZE_768X90	@"768x90"
-
-// Deprecated
-#define TJC_AD_BANNERSIZE_320X50	@"320x50"
-#define TJC_AD_BANNERSIZE_640X100	@"640x100"
-#define TJC_AD_BANNERSIZE_768X90	@"768x90"
 
 
 /*!	\enum TJCTransitionEnum
