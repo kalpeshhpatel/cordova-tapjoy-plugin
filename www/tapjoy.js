@@ -18,17 +18,17 @@ cordova.define("org.apache.cordova.plugin.TapjoyPlugin", function(require, expor
 
 var Tapjoy = {
 
-    serviceName = "TapjoyPlugin",
-    eventDict = {},
+    serviceName: "TapjoyPlugin",
+    eventDict: {},
 
-    TJC_DISPLAY_AD_SIZE_320X50  = "320x50";
-    TJC_DISPLAY_AD_SIZE_640X100 = "640x100";
-    TJC_DISPLAY_AD_SIZE_768X90  = "768x90";
+    TJC_DISPLAY_AD_SIZE_320X50: "320x50",
+    TJC_DISPLAY_AD_SIZE_640X100: "640x100",
+    TJC_DISPLAY_AD_SIZE_768X90: "768x90",
 
     // iOS settings for collection of MAC address. Use this with the TJC_OPTION_COLLECT_MAC_ADDRESS option.
-    MacAddressOptionOn = "0";                   // Enables collection of MAC address.
-    MacAddressOptionOffWithVersionCheck = "1";  // Disables collection of MAC address for iOS versions 6.0 and above.
-    MacAddressOptionOff = "2";                  // Completely disables collection of MAC address. THIS WILL EFFECTIVELY DISABLE THE SDK FOR IOS VERSIONS BELOW 6.0!
+    MacAddressOptionOn: "0",                   // Enables collection of MAC address.
+    MacAddressOptionOffWithVersionCheck: "1",  // Disables collection of MAC address for iOS versions 6.0 and above.
+    MacAddressOptionOff: "2",                  // Completely disables collection of MAC address. THIS WILL EFFECTIVELY DISABLE THE SDK FOR IOS VERSIONS BELOW 6.0!
 };
 
 /**
