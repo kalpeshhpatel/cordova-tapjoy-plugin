@@ -15,8 +15,24 @@
         <engine name="cordova" version=">=3.0" />
     </engines>
 
-    <js-module src="www/tapjoy.js" name="Tapjoy">
+    <!--js-module src="www/tapjoy.js" name="Tapjoy">
         <clobbers target="Tapjoy" />
+    </js-module-->
+
+    <js-module src="www/TJEvent.js" name="TJEvent">
+        <clobbers target="TJEvent" />
+    </js-module>
+
+    <js-module src="www/TJEventDelegate.js" name="TJEventDelegate">
+        <clobbers target="TJEventDelegate" />
+    </js-module>
+
+    <js-module src="www/TJEventRequest.js" name="TJEventRequest">
+        <clobbers target="TJEventRequest" />
+    </js-module>
+
+    <js-module src="www/tapjoy.js" name="Tapjoy">
+        <clobbers target="navigator.Tapjoy" />
     </js-module>
 
     <dependency id="org.apache.cordova.device" version=">=0.2.8"/>
