@@ -60,7 +60,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showOffersError:)
                                                  name:TJC_OFFERS_RESPONSE_NOTIFICATION_ERROR
                                                object:nil];
-    
+
     NSLog(@"Name: %@, ID: %@", command.methodName, command.callbackId);
     self.connectCallbackID = command.callbackId;
 
@@ -72,7 +72,7 @@
 
     [[Tapjoy sharedTapjoyConnect] setPlugin:@"phonegap"];
     NSLog(@"Conncting via Tapjoy SDK %@", [Tapjoy getVersion]); // <-- getVersion not working
-    
+
     [Tapjoy setVideoAdDelegate:self];
 
     [self.commandDelegate runInBackground:^{
@@ -89,7 +89,7 @@
 {
     NSString *key = [command.arguments objectAtIndex:0];
     id value = [command.arguments objectAtIndex:1];
-    
+
     [self.keyFlagValueDict setObject:value forKey:key];
     [self sendPluginOK:command];
 }
@@ -103,7 +103,7 @@
 {
     NSString *userID = [command.arguments objectAtIndex:0];
     [Tapjoy setUserID:userID];
-    
+
     // TODO: Report server success/error
 }
 
@@ -130,7 +130,7 @@
 {
     NSString *actionID = [command.arguments objectAtIndex:0];
     [Tapjoy actionComplete:actionID];
-    
+
     // TODO: Report server success/error
 }
 
@@ -150,9 +150,9 @@
     NSString *price = [command.arguments objectAtIndex:1];
     NSString *quantity = [command.arguments objectAtIndex:2];
     NSString *currencyCode = [command.arguments objectAtIndex:3];
-    
+
     [Tapjoy sendIAPEvent:name price:[price floatValue] quantity:[quantity intValue] currencyCode:currencyCode];
-    
+
     // TODO: Report server success/error
 }
 
@@ -164,7 +164,7 @@
 - (void)showOffers:(CDVInvokedUrlCommand *)command
 {
     self.offersCallbackID = command.callbackId;
-    
+
     [Tapjoy showOffersWithViewController:self.viewController];
 }
 
@@ -177,10 +177,10 @@
 - (void)showOffersWithCurrencyID:(CDVInvokedUrlCommand *)command
 {
     self.offersCallbackID = command.callbackId;
-    
+
     NSString *currencyID = [command.arguments objectAtIndex:0];
     BOOL selector = [[command.arguments objectAtIndex:1] boolValue];
-    
+
     [Tapjoy showOffersWithCurrencyID:currencyID withCurrencySelector:selector];
 }
 
@@ -192,7 +192,7 @@
 - (void)getTapPoints:(CDVInvokedUrlCommand *)command
 {
     self.tapPointsCallbackID = command.callbackId;
-    
+
     [Tapjoy getTapPoints];
 }
 
@@ -205,7 +205,7 @@
 - (void)spendTapPoints:(CDVInvokedUrlCommand *)command
 {
     self.spendTapPointsCallbackID = command.callbackId;
-    
+
     NSString *amountStr = [command.arguments objectAtIndex:0];
     if ([self isInt:amountStr]){
         [Tapjoy spendTapPoints:[amountStr intValue]];
@@ -222,7 +222,7 @@
 - (void)awardTapPoints:(CDVInvokedUrlCommand *)command
 {
     self.awardTapPointsCallbackID = command.callbackId;
-    
+
     NSString *amountStr = [command.arguments objectAtIndex:0];
     if ([self isInt:amountStr]){
         [Tapjoy awardTapPoints:[amountStr intValue]];
@@ -237,14 +237,14 @@
 - (void)getFullScreenAd:(CDVInvokedUrlCommand *)command
 {
     self.fullScreenAdCallbackID = command.callbackId;
-    
+
     [Tapjoy getFullScreenAd];
 }
 
 - (void)getFullScreenAdWithCurrencyID:(CDVInvokedUrlCommand *)command
 {
     self.fullScreenAdCallbackID = command.callbackId;
-    
+
     NSString *currencyID = [command.arguments objectAtIndex:0];
     [Tapjoy getFullScreenAdWithCurrencyID:currencyID];
 }
@@ -263,7 +263,7 @@
 {
     NSString *displayCountString = [command.arguments objectAtIndex:0];
     int displayCount = [displayCountString intValue];
-    
+
     [Tapjoy setVideoCacheCount:displayCount];
 }
 */
@@ -293,7 +293,7 @@
 {
     NSString *xString = [command.arguments objectAtIndex:0];
     NSString *yString = [command.arguments objectAtIndex:1];
-    
+
     // Adjust frame
     if ([self isInt:xString] && [self isInt:yString]) {
         displayAdFrame.origin = CGPointMake([xString intValue], [yString intValue]);
@@ -345,11 +345,14 @@
     NSString *guid = [command.arguments objectAtIndex:0];
     NSString *name = [command.arguments objectAtIndex:1];
     NSString *eventParam = [command.arguments objectAtIndex:2];
-    
+
     // Save callbacks in dict to workaround weird release/crash issues
     TapjoyEventPlugin *tjevt = [TapjoyEventPlugin createEventWithGuid:guid plugin:self];
     [self.callbackDict setObject:tjevt forKey:guid];
-    
+
+    // Log the event
+    NSLog([NSString stringWithFormat:@"Create Event guid=%@, name=%@, eventParam=%@", guid, name, eventParam]);
+
     TJEvent *evt = nil;
     if ([self isEmpty:eventParam]) {
         evt = [TJEvent eventWithName:name delegate:tjevt];
@@ -357,7 +360,7 @@
         evt = [TJEvent eventWithName:name value:eventParam delegate:tjevt];
     }
     [self.eventsDict setObject:evt forKey:guid];
-    
+
     [self sendPluginOK:command];
 }
 
@@ -365,10 +368,10 @@
 - (void)sendEvent:(CDVInvokedUrlCommand *)command
 {
     NSString *guid = [command.arguments objectAtIndex:0];
-    
+
     NSLog(@"Send Event with GUID: %@", guid);
     NSLog(@"Event: %@", [self.eventsDict objectForKey:guid]);
-    
+
     [self.commandDelegate runInBackground:^{
         [[self.eventsDict objectForKey:guid] send];
     }];
@@ -379,11 +382,11 @@
 - (void)showEvent:(CDVInvokedUrlCommand *)command
 {
     NSString *guid = [command.arguments objectAtIndex:0];
-    
+
     // TODO: Modify to use a different view controller... not the root view
     UIViewController *viewCntrl = [UIApplication sharedApplication].keyWindow.rootViewController;
     [[self.eventsDict objectForKey:guid] presentContentWithViewController:viewCntrl];
-    
+
     [self sendPluginOK:command];
 }
 
@@ -392,7 +395,7 @@
 {
     NSString *guid = [command.arguments objectAtIndex:0];
     id autoPresent = [command.arguments objectAtIndex:1];
-    
+
     [[self.eventsDict objectForKey:guid] setPresentAutomatically:[autoPresent boolValue]];
 }
 
@@ -406,7 +409,7 @@
         NSLog(@"Sending TJEventRequest completed");
         [request completed];
     }
-    
+
     // TODO: Report server success/error
 }
 
@@ -419,7 +422,7 @@
         NSLog(@"Sending TJEventRequest cancelled");
         [request cancelled];
     }
-    
+
     // TODO: Report server success/error
 }
 
@@ -430,22 +433,22 @@
 - (void)tjcConnectSuccess:(NSNotification *)notifyObj
 {
     NSLog(@"Tapjoy connect Succeeded");
-    
+
     NSString *stringToReturn = @"Connect Successful";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.connectCallbackID]];
 }
 
 - (void)tjcConnectFail:(NSNotification *)notifyObj
 {
     NSLog(@"Tapjoy connect Failed");
-    
+
     NSString *stringToReturn = @"Connect Failed";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.connectCallbackID]];
 }
 
@@ -455,24 +458,24 @@
 - (void)getUpdatedPoints:(NSNotification *)notifyObj
 {
     NSNumber *tapPoints = notifyObj.object;
-    
+
     NSString *stringToReturn = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     NSLog(@"Tap Points Callback ID: %@", self.tapPointsCallbackID);
-    
+
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.tapPointsCallbackID]];
 }
 
 - (void)getUpdatedPointsError:(NSNotification *)notifyObj
 {
     NSLog(@"Tap Points error");
-    
+
     NSString *stringToReturn = @"Get Tap Points Failed";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.tapPointsCallbackID]];
 }
 
@@ -485,18 +488,18 @@
     NSString *stringToReturn = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.spendTapPointsCallbackID]];
 }
 
 - (void)spendUpdatedPointsError:(NSNotification *)notifyObj
 {
     NSLog(@"Spend Tap Points error");
-    
+
     NSString *stringToReturn = @"Spend Tap Points Failed";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.spendTapPointsCallbackID]];
 }
 
@@ -507,22 +510,22 @@
     NSNumber *tapPoints = notifyObj.object;
     NSString *tapPointsStr = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
     NSLog(@"%@", tapPointsStr);
-    
+
     NSString *stringToReturn = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.awardTapPointsCallbackID]];
 }
 
 - (void)awardUpdatedPointsError:(NSNotification *)notifyObj
 {
     NSLog(@"Spend Tap Points error");
-    
+
     NSString *stringToReturn = @"Award Tap Points Failed";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.awardTapPointsCallbackID]];
 }
 
@@ -534,7 +537,7 @@
     NSString *stringToReturn = @"Full Screen Ad Successful";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.fullScreenAdCallbackID]];
 }
 
@@ -543,7 +546,7 @@
     NSString *stringToReturn = @"Full Screen Ad Failed";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.fullScreenAdCallbackID]];
 }
 */
@@ -555,7 +558,7 @@
     NSString *stringToReturn = @"Show Offers Failed";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.offersCallbackID]];
 }
 
@@ -638,7 +641,7 @@
     CDVPluginResult *pluginResult = nil;
     NSString *error = [NSString stringWithFormat:@"Error in TapjoyPlugin: %@", message];
     NSLog(@"%@", error);
-    
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -661,7 +664,7 @@
     NSString *stringToReturn = @"Display Ad Successful";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.displayAdCallbackID]];
 }
 
@@ -671,7 +674,7 @@
     NSString *stringToReturn = @"Display Ad Error";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.displayAdCallbackID]];
 }
 
@@ -704,7 +707,7 @@
     NSString *stringToReturn = @"Video Ad Completed";
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:stringToReturn];
-    
+
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.videoAdDelegateCallbackID]];
 }
 
@@ -734,7 +737,7 @@
 - (void)event:(NSString *)guid didRequestAction:(TJEventRequest *)request
 {
     [self.eventRequestDict setObject:request forKey:guid];
-    
+
     NSString *js = [NSString stringWithFormat:@"Tapjoy.eventDidRequestAction('%@', '%u', '%@', '%d');", guid, request.type, request.identifier, request.quantity];
     [self writeTapjoyJavaScript:js];
 }
