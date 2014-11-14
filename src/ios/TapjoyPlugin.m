@@ -458,12 +458,10 @@
 - (void)getUpdatedPoints:(NSNotification *)notifyObj
 {
     NSNumber *tapPoints = notifyObj.object;
+    NSLog(@"Current Tap Points (get): %d", [tapPoints intValue]);
 
-    NSString *stringToReturn = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
-
-    NSLog(@"Tap Points Callback ID: %@", self.tapPointsCallbackID);
+                                                         messageAsInt:[tapPoints intValue]];
 
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.tapPointsCallbackID]];
 }
@@ -484,10 +482,10 @@
 - (void)spendUpdatedPoints:(NSNotification *)notifyObj
 {
     NSNumber *tapPoints = notifyObj.object;
+    NSLog(@"Current Tap Points (spend): %d", [tapPoints intValue]);
 
-    NSString *stringToReturn = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
+                                                         messageAsInt:[tapPoints intValue]];
 
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.spendTapPointsCallbackID]];
 }
@@ -508,12 +506,10 @@
 - (void)awardUpdatedPoints:(NSNotification *)notifyObj
 {
     NSNumber *tapPoints = notifyObj.object;
-    NSString *tapPointsStr = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
-    NSLog(@"%@", tapPointsStr);
+    NSLog(@"Current Tap Points (award): %d", [tapPoints intValue]);
 
-    NSString *stringToReturn = [NSString stringWithFormat:@"Tap Points: %d", [tapPoints intValue]];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
+                                                         messageAsInt:[tapPoints intValue]];
 
     [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.awardTapPointsCallbackID]];
 }
