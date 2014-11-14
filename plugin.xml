@@ -75,8 +75,8 @@
 
         <header-file src="src/ios/TapjoyPlugin.h" />
         <source-file src="src/ios/TapjoyPlugin.m" />
-        <header-file src="src/ios/TapjoyEventPlugin.h" />
-        <source-file src="src/ios/TapjoyEventPlugin.m" />
+        <header-file src="src/ios/TapjoyEventDelegate.h" />
+        <source-file src="src/ios/TapjoyEventDelegate.m" />
 
         <resource-file src="src/ios/Framework/Tapjoy.framework/Resources/TapjoyResources.bundle" />
         <framework src="src/ios/Framework/Tapjoy.framework" custom="true"/>

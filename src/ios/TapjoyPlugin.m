@@ -6,7 +6,7 @@
 //
 
 #import "TapjoyPlugin.h"
-#import "TapjoyEventPlugin.h"
+#import "TapjoyEventDelegate.h"
 
 
 @implementation TapjoyPlugin
@@ -347,7 +347,7 @@
     NSString *eventParam = [command.arguments objectAtIndex:2];
 
     // Save callbacks in dict to workaround weird release/crash issues
-    TapjoyEventPlugin *tjevt = [TapjoyEventPlugin createEventWithGuid:guid plugin:self];
+    TapjoyEventDelegate *tjevt = [TapjoyEventDelegate createEventWithGuid:guid plugin:self];
     [self.callbackDict setObject:tjevt forKey:guid];
 
     // Log the event
