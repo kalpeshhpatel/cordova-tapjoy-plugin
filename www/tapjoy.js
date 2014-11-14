@@ -93,6 +93,20 @@ Tapjoy.setUserID = function(userID, successCallback, failureCallback) {
 };
 
 /**
+ * Enable Tapjoy SDK logging to the console
+ *
+ * @param enable            True or false
+ */
+Tapjoy.enableLogging = function(enable) {
+    return cordova.exec(
+        successCallback,
+        failureCallback,
+        Tapjoy.serviceName,
+        "enableLogging",
+        [enable]);
+};
+
+/**
  * Use for advertising your app if it is a Paid App.  Call after requestTapjoyConnect.
  *
  * @param paidAppActionID	The Tapjoy Paid App Action ID for this offer.
