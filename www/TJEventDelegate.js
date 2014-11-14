@@ -14,22 +14,18 @@
  * Creates a new instance of TJEventDelegate
  * @constructor
  *
- * @param eventSuccessFunction          Function to be called when the event is sent successfully.
- * @param eventFailedFunction           Function to be called when an error occurs.
- * @param contentWillAppearFunction     Function to be called when event content will come into view.
- * @param contentDidAppearFunction      Function to be called when event content is in view.
- * @param contentWillDisappearFunction  Function to be called when event content will be removed.
- * @param contentDidDisappearFunction   Function to be called when event content is removed from view.
- * @param didRequestActionFunction      Function to be called when an action was successfully requested.
+ * @param eventSuccess           Function called when the event is sent successfully.
+ * @param eventFailed            Function called when an error occurs.
+ * @param contentDidAppear       Function called when event content is in view.
+ * @param contentDidDisappear    Function called when event content is removed from view.
+ * @param didRequestAction       Function called when an action was successfully requested.
  */
-var TJEventDelegate = function(eventSuccessFunction, eventFailedFunction, contentWillAppearFunction, contentDidAppearFunction, contentWillDisappearFunction, contentDidDisappearFunction, didRequestActionFunction) {
-    this.eventSuccessFunction = eventSuccessFunction;
-    this.eventFailedFunction = eventFailedFunction;
-    this.contentWillAppearFunction = contentWillAppearFunction;
-    this.contentDidAppearFunction = contentDidAppearFunction;
-    this.contentWillDisappearFunction = contentWillDisappearFunction;
-    this.contentDidDisappearFunction = contentDidDisappearFunction;
-    this.didRequestActionFunction = didRequestActionFunction;
+var TJEventDelegate = function(callbacks) {
+    this.eventSuccessFn = callbacks.eventSuccess;
+    this.eventFailedFn = callbacks.eventFailed;
+    this.contentDidAppearFn = callbacks.contentDidAppear;
+    this.contentDidDisappearFn = callbacks.contentDidDisappear;
+    this.didRequestActionFn = callbacks.didRequestAction;
 };
 
 /**
@@ -39,7 +35,7 @@ var TJEventDelegate = function(eventSuccessFunction, eventFailedFunction, conten
  * @param contentIsAvailable  true if content is available, otherwise false
  */
 TJEventDelegate.prototype.sendEventSucceeded = function(tjEvent, contentIsAvailable) {
-    this.eventSuccessFunction(tjEvent, contentIsAvailable);
+    if (this.eventSuccessFn) this.eventSuccessFn(tjEvent, contentIsAvailable);
 };
 
 /**
@@ -49,7 +45,7 @@ TJEventDelegate.prototype.sendEventSucceeded = function(tjEvent, contentIsAvaila
  * @param errorMsg      The error that occurred
  */
 TJEventDelegate.prototype.sendEventFailed = function(tjEvent, errorMsg) {
-    this.eventFailedFunction(tjEvent, errorMsg);
+    if (this.eventFailedFn) this.eventFailedFn(tjEvent, errorMsg);
 };
 
 /**
@@ -58,7 +54,7 @@ TJEventDelegate.prototype.sendEventFailed = function(tjEvent, errorMsg) {
  * @param tjEvent       The TJEvent that was sent
  */
 TJEventDelegate.prototype.contentDidAppear = function(tjEvent) {
-    this.contentDidAppearFunction(tjEvent);
+    if (this.contentDidAppearFn) this.contentDidAppearFn(tjEvent);
 };
 
 /**
@@ -67,7 +63,7 @@ TJEventDelegate.prototype.contentDidAppear = function(tjEvent) {
  * @param tjEvent       The TJEvent that was sent
  */
 TJEventDelegate.prototype.contentDidDisappear = function(tjEvent) {
-    this.contentDidDisappearFunction(tjEvent);
+    if (this.contentDidDisappearFn) this.contentDidDisappearFn(tjEvent);
 };
 
 /**
@@ -77,7 +73,7 @@ TJEventDelegate.prototype.contentDidDisappear = function(tjEvent) {
  * @param tjEventRequest  The TJEventRequest object describing the request
  */
 TJEventDelegate.prototype.didRequestAction = function(tjEvent, tjEventRequest) {
-    this.didRequestActionFunction(tjEvent, tjEventRequest);
+    if (this.didRequestActionFn) this.didRequestActionFn(tjEvent, tjEventRequest);
 };
 
 module.exports = TJEventDelegate;

@@ -492,21 +492,9 @@ Tapjoy.sendEventFail = function(guid, errorMsg) {
     }
 };
 
-Tapjoy.eventContentWillAppear = function(guid) {
-    if (guid in Tapjoy.eventDict){
-        Tapjoy.eventDict[guid].triggerContentWillAppear();
-    }
-};
-
 Tapjoy.eventContentDidAppear = function(guid) {
     if (guid in Tapjoy.eventDict){
         Tapjoy.eventDict[guid].triggerContentDidAppear();
-    }
-};
-
-Tapjoy.eventContentWillDisappear = function(guid) {
-    if (guid in Tapjoy.eventDict){
-        Tapjoy.eventDict[guid].triggerContentWillDisappear();
     }
 };
 
