@@ -31,7 +31,7 @@
 - (void)sendEventComplete:(TJEvent *)event withContent:(BOOL)contentIsAvailable
 {
     NSLog(@"Send event complete from TapjoyPlugin");
-    [self.TapjoyPlugin sendEventComplete:self.myGuid withContent:contentIsAvailable];
+    [self.tapjoyPlugin sendEventComplete:self.myGuid withContent:contentIsAvailable];
 }
 
 - (void)sendEventFail:(TJEvent *)event error:(NSError *)error
