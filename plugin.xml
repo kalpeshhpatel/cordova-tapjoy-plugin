@@ -15,9 +15,9 @@
         <engine name="cordova" version=">=3.0" />
     </engines>
 
-    <!--js-module src="www/tapjoy.js" name="Tapjoy">
+    <js-module src="www/tapjoy.js" name="Tapjoy">
         <clobbers target="Tapjoy" />
-    </js-module-->
+    </js-module>
 
     <js-module src="www/TJEvent.js" name="TJEvent">
         <clobbers target="TJEvent" />
@@ -29,10 +29,6 @@
 
     <js-module src="www/TJEventRequest.js" name="TJEventRequest">
         <clobbers target="TJEventRequest" />
-    </js-module>
-
-    <js-module src="www/tapjoy.js" name="Tapjoy">
-        <clobbers target="Tapjoy" />
     </js-module>
 
     <dependency id="org.apache.cordova.device" version=">=0.2.8"/>
@@ -77,47 +73,32 @@
             </feature>
         </config-file>
 
-        <source-file src="src/ios/TapjoyPlugin.m" />
-        <source-file src="src/ios/TapjoyEventPlugin.m" />
-
         <header-file src="src/ios/TapjoyPlugin.h" />
+        <source-file src="src/ios/TapjoyPlugin.m" />
         <header-file src="src/ios/TapjoyEventPlugin.h" />
+        <source-file src="src/ios/TapjoyEventPlugin.m" />
 
         <resource-file src="src/ios/Framework/Tapjoy.framework/Resources/TapjoyResources.bundle" />
         <framework src="src/ios/Framework/Tapjoy.framework" custom="true"/>
-        <!--framework src="AddressBook.framework" /-->
-        <!--framework src="AddressBookUI.framework" /-->
         <framework src="AdSupport.framework" />
-        <!--framework src="AssetsLibrary.framework" /-->
-        <!--framework src="AudioToolbox.framework" /-->
-        <!--framework src="AVFoundation.framework" /-->
         <framework src="CFNetwork.framework" />
-        <!--framework src="CoreData.framework" /-->
         <framework src="CoreGraphics.framework" />
         <framework src="CoreLocation.framework" />
-        <!--framework src="CoreMedia.framework" /-->
         <framework src="CoreMotion.framework" />
         <framework src="CoreTelephony.framework" />
         <framework src="EventKit.framework" />
         <framework src="EventKitUI.framework"/>
         <framework src="Foundation.framework" />
-        <!--framework src="ImageIO.framework"/-->
-        <!--framework src="libsqlite3.0.dylib" /-->
-        <!--framework src="libxml2.dylib" /-->
-        <!--framework src="libz.dylib" /-->
         <framework src="MapKit.framework" />
         <framework src="MediaPlayer.framework" />
         <framework src="MessageUI.framework" />
         <framework src="MobileCoreServices.framework" />
-        <!--framework src="OpenAL.framework" /-->
         <framework src="QuartzCore.framework" />
         <framework src="StoreKit.framework"/>
         <framework src="Social.framework" weak="true"/>
-        <!--framework src="Security.framework"/-->
         <framework src="SystemConfiguration.framework" />
         <framework src="Twitter.framework"/>
         <framework src="UIKit.framework" />
-
     </platform>
 
 </plugin>
