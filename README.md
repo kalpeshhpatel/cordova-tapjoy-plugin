@@ -1,20 +1,52 @@
 Cordova Tapjoy Plugin
-==========
+=====================
 
-This is phonegap/cordova plugin for integrating [Tapjoy](https://www.tapjoy.com) ad provider in cordova based applications. 
+## Basic Usage
 
-This plugin is the same as described [here](http://tech.tapjoy.com/product-overview/available-plugins/phonegap-plugin), but organized as per cordova plugin [specification](http://docs.phonegap.com/en/3.3.0/plugin_ref_spec.md.html#Plugin%20Specification) so as to install it easily.
+	// Call requestTapjoyConnect first thing
+	Tapjoy.requestTapjoyConnect(MY_APP_ID, MY_SECRET_KEY, success, error);
+	Tapjoy.enableLogging();
 
-It supports both **Android** and **iOS** platform v10.
+	// The TJEventDelegate class wraps a set of callbacks you can override:
+	//   eventSuccess: function(){},
+	//   eventFailed: function(){},
+	//   didRequestAction: function(){},
+	//   contentDidAppear: function(){},
+	//   contentDidDisappear: function(){}
+	var _tjDelegate = new TJEventDelegate(function () {
 
-Installation
-----------
-Install the plugin by running following command from your terminal. (Make sure you are at the root of your cordova project.)
+		var current_points = NaN;
+		function diff(newVal, oldVal) {
+			if (isNaN(newVal) || isNaN(oldVal)) return 0;
+			return newVal - oldVal;
+		}
+		// Delegate callbacks
+		return {
+			eventSuccess: function () {
+				console.log('eventSuccess');
+				Tapjoy.getTapPoints(function (data) {
+					current_points = data.points;
+				});
+			},
+			eventFailed: function () {
+				Logger.log('Tapjoy event failed');
+				current_points = NaN;
+			},
+			contentDidDisappear: function () {
+				Tapjoy.getTapPoints( function (data) {
+					console.log("Total Points: " + data.points);
+					console.log("Earned Points: " + diff(data.points, current_points));
+					current_points = NaN;
+				});
+			}
+		}
+	});
 
-```
-cordova plugin add  https://github.com/kalpeshhpatel/cordova-tapjoy-plugin.git
-```
+	// TJEvent wraps the entire event lifecycle
+	var _tjEvent = new TJEvent(MY_EVENT_NAME, MY_EVENT_VALUE, _tjDelegate);
 
-After installation you can call any of the ```js``` api provided by Tapjoy. 
+	// Prepare the event
+	_tjEvent.send();
 
-To view list of ```js``` api, please visit ```tapjoy.js``` file located inside ```www``` directory. 
+	// Show the event
+	_tjEvent.show();
