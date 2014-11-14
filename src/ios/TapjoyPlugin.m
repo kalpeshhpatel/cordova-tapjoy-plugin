@@ -42,9 +42,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(awardUpdatedPoints:)
                                                  name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION
                                                object:nil];
-    /*[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFullScreenAdResponse:)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFullScreenAdResponse:)
                                                  name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION
-                                               object:nil];*/
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUpdatedPointsError:)
                                                  name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR
                                                object:nil];
@@ -54,9 +54,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(awardUpdatedPointsError:)
                                                  name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR
                                                object:nil];
-    /*[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFullScreenAdError:)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFullScreenAdError:)
                                                  name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION_ERROR
-                                               object:nil];*/
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showOffersError:)
                                                  name:TJC_OFFERS_RESPONSE_NOTIFICATION_ERROR
                                                object:nil];
@@ -76,7 +76,7 @@
     [Tapjoy setVideoAdDelegate:self];
 
     [self.commandDelegate runInBackground:^{
-        if([self hasKeyFlags]){
+        if ([self hasKeyFlags]){
             [Tapjoy requestTapjoyConnect:appID secretKey:secretKey options:self.keyFlagValueDict];
         } else {
             [Tapjoy requestTapjoyConnect:appID secretKey:secretKey];
@@ -231,7 +231,7 @@
     }
 }
 
-/*
+
 #pragma mark - Deprecated API Methods
 
 - (void)getFullScreenAd:(CDVInvokedUrlCommand *)command
@@ -266,12 +266,12 @@
 
     [Tapjoy setVideoCacheCount:displayCount];
 }
-*/
+
 
 #pragma mark -
 
 /**
- * What does this do...?
+ * TODO: Document
  */
 - (void)getDisplayAd:(CDVInvokedUrlCommand *)command
 {
@@ -351,7 +351,7 @@
     [self.callbackDict setObject:tjevt forKey:guid];
 
     // Log the event
-    NSLog(@"Create Event guid:%@, name:%@, eventParam:%@", guid, name, eventParam);
+    NSLog(@"Create Event GUID: %@, name:%@, eventParam:%@", guid, name, eventParam);
 
     TJEvent *evt = nil;
     if ([self isEmpty:eventParam]) {
@@ -368,9 +368,7 @@
 - (void)sendEvent:(CDVInvokedUrlCommand *)command
 {
     NSString *guid = [command.arguments objectAtIndex:0];
-
-    NSLog(@"Send Event with GUID: %@", guid);
-    NSLog(@"Event: %@", [self.eventsDict objectForKey:guid]);
+    NSLog(@"Send Event GUID: %@", guid);
 
     [self.commandDelegate runInBackground:^{
         [[self.eventsDict objectForKey:guid] send];
@@ -382,8 +380,10 @@
 - (void)showEvent:(CDVInvokedUrlCommand *)command
 {
     NSString *guid = [command.arguments objectAtIndex:0];
+    NSLog(@"Show Event GUID: %@", guid);
 
     // TODO: Modify to use a different view controller... not the root view
+    //       This might be better than using the cordova view, actually?
     UIViewController *viewCntrl = [UIApplication sharedApplication].keyWindow.rootViewController;
     [[self.eventsDict objectForKey:guid] presentContentWithViewController:viewCntrl];
 
@@ -529,7 +529,7 @@
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.awardTapPointsCallbackID]];
 }
 
-/*
+
 #pragma mark - Full Screen Hooks
 
 - (void)getFullScreenAdResponse:(NSNotification *)notifyObj
@@ -549,7 +549,7 @@
 
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.fullScreenAdCallbackID]];
 }
-*/
+
 
 #pragma mark - Offers Hooks
 
@@ -763,8 +763,8 @@
 
 - (void)contentWillAppear:(NSString *)guid
 {
-    NSString *js = [NSString stringWithFormat:@"Tapjoy.eventContentWillAppear('%@');", guid];
-    [self writeTapjoyJavaScript:js];
+    // This does not provide any utility to cordova
+    // apps since js bridge calls are asynchronous
 }
 
 - (void)contentDidAppear:(NSString *)guid
@@ -775,8 +775,8 @@
 
 - (void)contentWillDisappear:(NSString *)guid
 {
-    NSString *js = [NSString stringWithFormat:@"Tapjoy.eventContentWillDisappear('%@');", guid];
-    [self writeTapjoyJavaScript:js];
+    // This does not provide any utility to cordova
+    // apps since js bridge calls are asynchronous
 }
 
 - (void)contentDidDisappear:(NSString *)guid
