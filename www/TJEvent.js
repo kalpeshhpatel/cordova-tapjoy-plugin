@@ -10,7 +10,8 @@
  *   https://www.tapjoy.com/sdk/license
  */
 
-var TJEventRequest = require('./TJEventRequest');
+var Tapjoy = require('./tapjoy'),
+    TJEventRequest = require('./TJEventRequest');
 
 /**
  * Creates a new instance of TJEvent
