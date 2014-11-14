@@ -24,7 +24,7 @@ var Tapjoy = require('./Tapjoy'),
 var TJEvent = function(eventName, eventParameter, eventDelegate) {
     this.eventName = eventName;
     this.eventParameter = eventParameter;
-    this.eventCallback = eventCallback;
+    this.eventDelegate = eventDelegate;
 
     Tapjoy.createEvent(this, eventName, eventParameter);
 };
@@ -48,25 +48,25 @@ TJEvent.prototype.enableAutoPresent = function(autoPresent) {
 };
 
 TJEvent.prototype.triggerSendEventSucceeded = function(contentIsAvailable){
-    this.eventCallback.sendEventSucceeded(this, contentIsAvailable);
+    this.eventDelegate.sendEventSucceeded(this, contentIsAvailable);
 };
 
 TJEvent.prototype.triggerSendEventFailed = function(errorMsg){
-    this.eventCallback.sendEventFailed(this, errorMsg);
+    this.eventDelegate.sendEventFailed(this, errorMsg);
 };
 
 TJEvent.prototype.triggerContentDidAppear = function(){
-    this.eventCallback.contentDidAppear(this);
+    this.eventDelegate.contentDidAppear(this);
 };
 
 TJEvent.prototype.triggerContentDidDisappear = function(){
-    this.eventCallback.contentDidDisappear(this);
+    this.eventDelegate.contentDidDisappear(this);
 };
 
 TJEvent.prototype.triggerDidRequestAction = function(type, identifier, quantity){
     var eventRequest = new TJEventRequest(this.guid, type, identifier, quantity);
 
-    this.eventCallback.didRequestAction(this, eventRequest);
+    this.eventDelegate.didRequestAction(this, eventRequest);
 };
 
 module.exports = TJEvent;
