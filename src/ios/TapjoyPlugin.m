@@ -351,7 +351,7 @@
     [self.callbackDict setObject:tjevt forKey:guid];
 
     // Log the event
-    NSLog([NSString stringWithFormat:@"Create Event guid=%@, name=%@, eventParam=%@", guid, name, eventParam]);
+    NSLog(@"Create Event guid:%@, name:%@, eventParam:%@", guid, name, eventParam);
 
     TJEvent *evt = nil;
     if ([self isEmpty:eventParam]) {
