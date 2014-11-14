@@ -85,39 +85,38 @@
 
         <resource-file src="src/ios/Framework/Tapjoy.framework/Resources/TapjoyResources.bundle" />
         <framework src="src/ios/Framework/Tapjoy.framework" custom="true"/>
-        <framework src="Security.framework"/>
-        <framework src="CoreData.framework" />
+        <!--framework src="AddressBook.framework" /-->
+        <!--framework src="AddressBookUI.framework" /-->
+        <framework src="AdSupport.framework" />
+        <!--framework src="AssetsLibrary.framework" /-->
+        <!--framework src="AudioToolbox.framework" /-->
+        <!--framework src="AVFoundation.framework" /-->
+        <framework src="CFNetwork.framework" />
+        <!--framework src="CoreData.framework" /-->
+        <framework src="CoreGraphics.framework" />
+        <framework src="CoreLocation.framework" />
+        <!--framework src="CoreMedia.framework" /-->
+        <framework src="CoreMotion.framework" />
+        <framework src="CoreTelephony.framework" />
         <framework src="EventKit.framework" />
         <framework src="EventKitUI.framework"/>
-        <framework src="libsqlite3.0.dylib" />
-        <framework src="libxml2.dylib"/>
-        <framework src="libz.dylib"/>
-        <framework src="MapKit.framework" />
-        <framework src="MessageUI.framework"/>
-        <framework src="Social.framework" weak="true"/>
-        <framework src="StoreKit.framework" weak="true"/>
-        <framework src="Twitter.framework" weak="true"/>
-        <framework src="CoreTelephony.framework" weak="true"/>
-        <framework src="CoreMotion.framework"/>
-        <framework src="AdSupport.framework" weak="true"/>
-        <framework src="CoreLocation.framework" />
-        <framework src="ImageIO.framework"/>
-        <framework src="OpenAL.framework" />
-        <framework src="AssetsLibrary.framework" />
-        <framework src="UIKit.framework" weak="true"/>
         <framework src="Foundation.framework" />
-        <framework src="CoreGraphics.framework" />
-        <framework src="AddressBook.framework" />
-        <framework src="AddressBookUI.framework" />
-        <framework src="AudioToolbox.framework" />
-        <framework src="AVFoundation.framework" weak="true"/>
-        <framework src="CFNetwork.framework" />
-        <framework src="CoreLocation.framework" />
+        <!--framework src="ImageIO.framework"/-->
+        <!--framework src="libsqlite3.0.dylib" /-->
+        <!--framework src="libxml2.dylib" /-->
+        <!--framework src="libz.dylib" /-->
+        <framework src="MapKit.framework" />
         <framework src="MediaPlayer.framework" />
+        <framework src="MessageUI.framework" />
+        <framework src="MobileCoreServices.framework" />
+        <!--framework src="OpenAL.framework" /-->
         <framework src="QuartzCore.framework" />
+        <framework src="StoreKit.framework"/>
+        <framework src="Social.framework" weak="true"/>
+        <!--framework src="Security.framework"/-->
         <framework src="SystemConfiguration.framework" />
-        <framework src="MobileCoreServices.framework"/>
-        <framework src="CoreMedia.framework" weak="true"/>
+        <framework src="Twitter.framework"/>
+        <framework src="UIKit.framework" />
 
     </platform>
 
