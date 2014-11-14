@@ -11,7 +11,7 @@
 #import <Tapjoy/TJEvent.h>
 
 
-#define DEPRECATED_ATTRIBUTE        __attribute__((deprecated))
+#define DEPRECATED_ATTRIBUTE __attribute__((deprecated))
 
 #pragma mark - Event Callback IDs
 
@@ -50,13 +50,16 @@ static NSString* const TJ_DID_REQUEST_ACTION = @"TJ_DID_REQUEST_ACTION";
 - (void)setFlagKeyValue:(CDVInvokedUrlCommand *)command;
 - (void)setUserID:(CDVInvokedUrlCommand *)command;
 
-- (void)getTapPoints:(CDVInvokedUrlCommand *)command;
-- (void)spendTapPoints:(CDVInvokedUrlCommand *)command;
-- (void)awardTapPoints:(CDVInvokedUrlCommand *)command;
-
 - (void)enableLogging:(CDVInvokedUrlCommand *)command;
 - (void)sendIAPEvent:(CDVInvokedUrlCommand *)command;
 - (void)actionComplete:(CDVInvokedUrlCommand *)command;
+- (void)dismissContent:(CDVInvokedUrlCommand *)command;
+
+#pragma mark - Currency
+
+- (void)getTapPoints:(CDVInvokedUrlCommand *)command;
+- (void)spendTapPoints:(CDVInvokedUrlCommand *)command;
+- (void)awardTapPoints:(CDVInvokedUrlCommand *)command;
 
 #pragma mark - Offers
 
@@ -68,8 +71,7 @@ static NSString* const TJ_DID_REQUEST_ACTION = @"TJ_DID_REQUEST_ACTION";
 - (void)getDisplayAd:(CDVInvokedUrlCommand *)command;
 - (void)setDisplayAdSize:(CDVInvokedUrlCommand *)command;
 - (void)moveDisplayAd:(CDVInvokedUrlCommand *)command;
-- (void)dismissContent:(CDVInvokedUrlCommand *)command;
-// These need testing
+// TODO: These need testing
 - (void)showDisplayAd:(CDVInvokedUrlCommand *)command;
 - (void)hideDisplayAd:(CDVInvokedUrlCommand *)command;
 - (void)enableDisplayAdAutoRefresh:(CDVInvokedUrlCommand *)command;

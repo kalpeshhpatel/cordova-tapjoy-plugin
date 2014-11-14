@@ -17,13 +17,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_CONNECT_SUCCESS object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_CONNECT_FAILED object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION_ERROR object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TJC_OFFERS_RESPONSE_NOTIFICATION_ERROR object:nil];
 
@@ -33,26 +27,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tjcConnectFail:)
                                                  name:TJC_CONNECT_FAILED
                                                object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUpdatedPoints:)
-                                                 name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spendUpdatedPoints:)
-                                                 name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(awardUpdatedPoints:)
-                                                 name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION
-                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFullScreenAdResponse:)
                                                  name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUpdatedPointsError:)
-                                                 name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(spendUpdatedPointsError:)
-                                                 name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(awardUpdatedPointsError:)
-                                                 name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFullScreenAdError:)
                                                  name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION_ERROR
@@ -71,7 +47,7 @@
     displayAdFrame = CGRectMake(0, 0, 320, 50);
 
     [[Tapjoy sharedTapjoyConnect] setPlugin:@"phonegap"];
-    NSLog(@"Conncting via Tapjoy SDK %@", [Tapjoy getVersion]); // <-- getVersion not working
+    NSLog(@"Conncting via Tapjoy SDK %@", [Tapjoy getVersion]); // FIXME: getVersion not working
 
     [Tapjoy setVideoAdDelegate:self];
 
@@ -187,13 +163,25 @@
 #pragma mark -
 
 /**
- * Requests for Tap Points (Virtual Currency) notify via TJC_TAP_POINTS_RESPONSE_NOTIFICATION notification.
+ * Request current Tap Points (virtual currency) value from server.
  */
 - (void)getTapPoints:(CDVInvokedUrlCommand *)command
 {
     self.tapPointsCallbackID = command.callbackId;
 
-    [Tapjoy getTapPoints];
+    [Tapjoy getTapPointsWithCompletion:^(NSDictionary *parameters, NSError *error) {
+        if (error) {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                              messageAsString:[error localizedDescription]];
+            [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.tapPointsCallbackID]];
+        }
+        else {
+            NSLog(@"Current Tap Points: %d", [parameters[@"amount"] intValue]);
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                          messageAsDictionary:parameters];
+            [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.tapPointsCallbackID]];
+        }
+    }];
 }
 
 /**
@@ -207,11 +195,24 @@
     self.spendTapPointsCallbackID = command.callbackId;
 
     NSString *amountStr = [command.arguments objectAtIndex:0];
-    if ([self isInt:amountStr]){
-        [Tapjoy spendTapPoints:[amountStr intValue]];
-    } else {
+    if (![self isInt:amountStr]) {
         [self sendPluginError:command message:@"Points must be an integer"];
+        return;
     }
+
+    [Tapjoy spendTapPoints:[amountStr intValue] completion:^(NSDictionary *parameters, NSError *error) {
+        if (error) {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                              messageAsString:[error localizedDescription]];
+            [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.spendTapPointsCallbackID]];
+        }
+        else {
+            NSLog(@"Current Tap Points: %d", [parameters[@"amount"] intValue]);
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                          messageAsDictionary:parameters];
+            [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.spendTapPointsCallbackID]];
+        }
+    }];
 }
 
 /**
@@ -224,11 +225,24 @@
     self.awardTapPointsCallbackID = command.callbackId;
 
     NSString *amountStr = [command.arguments objectAtIndex:0];
-    if ([self isInt:amountStr]){
-        [Tapjoy awardTapPoints:[amountStr intValue]];
-    } else {
+    if (![self isInt:amountStr]) {
         [self sendPluginError:command message:@"Points must be an integer"];
+        return;
     }
+
+    [Tapjoy awardTapPoints:[amountStr intValue] completion:^(NSDictionary *parameters, NSError *error) {
+        if (error) {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                              messageAsString:[error localizedDescription]];
+            [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.awardTapPointsCallbackID]];
+        }
+        else {
+            NSLog(@"Current Tap Points: %d", [parameters[@"amount"] intValue]);
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                          messageAsDictionary:parameters];
+            [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.awardTapPointsCallbackID]];
+        }
+    }];
 }
 
 
@@ -271,7 +285,7 @@
 #pragma mark -
 
 /**
- * TODO: Document
+ * TODO: Document this
  */
 - (void)getDisplayAd:(CDVInvokedUrlCommand *)command
 {
@@ -330,7 +344,7 @@
 {
     [Tapjoy dismissContent];
 
-    // TODO: This should also notify appropriate event delegate callbacks
+    // TODO: Should also notify appropriate event delegate callbacks
     [self sendPluginOK:command];
 }
 
@@ -450,79 +464,6 @@
                                                       messageAsString:stringToReturn];
 
     [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.connectCallbackID]];
-}
-
-
-#pragma mark - Currency Hooks
-
-- (void)getUpdatedPoints:(NSNotification *)notifyObj
-{
-    NSNumber *tapPoints = notifyObj.object;
-    NSLog(@"Current Tap Points (get): %d", [tapPoints intValue]);
-
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                         messageAsInt:[tapPoints intValue]];
-
-    [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.tapPointsCallbackID]];
-}
-
-- (void)getUpdatedPointsError:(NSNotification *)notifyObj
-{
-    NSLog(@"Tap Points error");
-
-    NSString *stringToReturn = @"Get Tap Points Failed";
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
-
-    [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.tapPointsCallbackID]];
-}
-
-#pragma mark -
-
-- (void)spendUpdatedPoints:(NSNotification *)notifyObj
-{
-    NSNumber *tapPoints = notifyObj.object;
-    NSLog(@"Current Tap Points (spend): %d", [tapPoints intValue]);
-
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                         messageAsInt:[tapPoints intValue]];
-
-    [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.spendTapPointsCallbackID]];
-}
-
-- (void)spendUpdatedPointsError:(NSNotification *)notifyObj
-{
-    NSLog(@"Spend Tap Points error");
-
-    NSString *stringToReturn = @"Spend Tap Points Failed";
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
-
-    [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.spendTapPointsCallbackID]];
-}
-
-#pragma mark -
-
-- (void)awardUpdatedPoints:(NSNotification *)notifyObj
-{
-    NSNumber *tapPoints = notifyObj.object;
-    NSLog(@"Current Tap Points (award): %d", [tapPoints intValue]);
-
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                         messageAsInt:[tapPoints intValue]];
-
-    [self writeTapjoyJavaScript:[pluginResult toSuccessCallbackString:self.awardTapPointsCallbackID]];
-}
-
-- (void)awardUpdatedPointsError:(NSNotification *)notifyObj
-{
-    NSLog(@"Spend Tap Points error");
-
-    NSString *stringToReturn = @"Award Tap Points Failed";
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:stringToReturn];
-
-    [self writeTapjoyJavaScript:[pluginResult toErrorCallbackString:self.awardTapPointsCallbackID]];
 }
 
 
