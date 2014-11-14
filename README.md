@@ -5,7 +5,7 @@ Cordova Tapjoy Plugin
 
 	// Call requestTapjoyConnect first thing
 	Tapjoy.requestTapjoyConnect(MY_APP_ID, MY_SECRET_KEY, success, error);
-	Tapjoy.enableLogging();
+	Tapjoy.enableLogging(true);
 
 	// The TJEventDelegate class wraps a set of callbacks you can override:
 	//   eventSuccess: function(){},

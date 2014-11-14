@@ -27,6 +27,7 @@ static NSString* const TJ_DID_REQUEST_ACTION = @"TJ_DID_REQUEST_ACTION";
 {
     CGRect displayAdFrame;
     NSString *displayAdSize;
+    BOOL pluginLogging;
 }
 
 @property (nonatomic, copy) NSString *connectCallbackID;            /*!< The callback ID for the Tapjoy Connect call. */
@@ -70,20 +71,19 @@ static NSString* const TJ_DID_REQUEST_ACTION = @"TJ_DID_REQUEST_ACTION";
 
 - (void)getDisplayAd:(CDVInvokedUrlCommand *)command;
 - (void)setDisplayAdSize:(CDVInvokedUrlCommand *)command;
-- (void)moveDisplayAd:(CDVInvokedUrlCommand *)command;
+- (void)enableDisplayAdAutoRefresh:(CDVInvokedUrlCommand *)command;
 // TODO: These need testing
 - (void)showDisplayAd:(CDVInvokedUrlCommand *)command;
 - (void)hideDisplayAd:(CDVInvokedUrlCommand *)command;
-- (void)enableDisplayAdAutoRefresh:(CDVInvokedUrlCommand *)command;
 - (void)moveDisplayAd:(CDVInvokedUrlCommand *)command;
 
 #pragma mark - Deprecated API Methods
 
- - (void)getFullScreenAd:(CDVInvokedUrlCommand *)command; DEPRECATED_ATTRIBUTE
- - (void)getFullScreenAdWithCurrencyID:(CDVInvokedUrlCommand *)command; DEPRECATED_ATTRIBUTE
- - (void)showFullScreenAd:(CDVInvokedUrlCommand *)command; DEPRECATED_ATTRIBUTE
- - (void)setVideoCacheCount:(CDVInvokedUrlCommand *)command; DEPRECATED_ATTRIBUTE
- - (void)cacheVideos:(CDVInvokedUrlCommand *)command; DEPRECATED_ATTRIBUTE
+- (void)getFullScreenAd:(CDVInvokedUrlCommand *)command DEPRECATED_ATTRIBUTE;
+- (void)getFullScreenAdWithCurrencyID:(CDVInvokedUrlCommand *)command DEPRECATED_ATTRIBUTE;
+- (void)showFullScreenAd:(CDVInvokedUrlCommand *)command DEPRECATED_ATTRIBUTE;
+- (void)setVideoCacheCount:(CDVInvokedUrlCommand *)command DEPRECATED_ATTRIBUTE;
+- (void)cacheVideos:(CDVInvokedUrlCommand *)command DEPRECATED_ATTRIBUTE;
 
 #pragma mark - Tapjoy Event API
 

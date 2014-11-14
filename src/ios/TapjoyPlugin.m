@@ -92,8 +92,12 @@
  */
 - (void)enableLogging:(CDVInvokedUrlCommand *)command
 {
-    BOOL enable = [[command.arguments objectAtIndex:0] boolValue];
-    [Tapjoy enableLogging:enable];
+    id enable = [command.arguments objectAtIndex:0];
+    BOOL enabled = (enable != (id)[NSNull null]) ? [enable boolValue] : NO;
+    [Tapjoy enableLogging:enabled];
+
+    // We'll use the same flag for cordova debugging
+    pluginLogging = enabled;
 }
 
 /**
@@ -584,11 +588,11 @@
 }
 
 /**
- * Debug all JavaScript calls
+ * Debug plugin JavaScript calls
  */
 - (void)writeTapjoyJavaScript:(NSString *)jsString
 {
-    NSLog(@"%@", jsString);
+    if (pluginLogging) NSLog(@"%@", jsString);
     [self writeJavascript:jsString];
 }
 
