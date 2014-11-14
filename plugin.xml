@@ -3,10 +3,10 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="org.apache.cordova.plugin.TapjoyPlugin"
-        version="1.0">
+        version="2.0">
 
     <name>Cordova Tapjoy Plugin</name>
-    <description>Cordova Tapjoy plugin</description>
+    <description>Cordova plugin wrapping Tapjoy SDK v10</description>
     <author>Kalpesh Patel</author>
     <license>GPLv2</license>
     <keywords>cordova,tapjoy,monetization</keywords>
