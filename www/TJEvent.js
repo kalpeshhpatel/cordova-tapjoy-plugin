@@ -10,7 +10,7 @@
  *   https://www.tapjoy.com/sdk/license
  */
 
-var Tapjoy = require('./tapjoy'),
+var Tapjoy = require('./Tapjoy'),
     TJEventRequest = require('./TJEventRequest');
 
 /**
