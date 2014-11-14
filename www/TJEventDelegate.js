@@ -1,5 +1,4 @@
-cordova.define("org.apache.cordova.plugin.TapjoyPlugin.TJEventDelegate", function(require, exports, module) { /*
- *
+/*
  * Copyright (C) 2011-2012 by Tapjoy Inc.
  *
  * This file is part of the Tapjoy SDK.
@@ -82,5 +81,3 @@ TJEventDelegate.prototype.didRequestAction = function(tjEvent, tjEventRequest) {
 };
 
 module.exports = TJEventDelegate;
-
-});

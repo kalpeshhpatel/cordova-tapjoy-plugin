@@ -1,5 +1,4 @@
-cordova.define("org.apache.cordova.plugin.TapjoyPlugin.TJEvent", function(require, exports, module) { /*
- *
+/*
  * Copyright (C) 2011-2012 by Tapjoy Inc.
  *
  * This file is part of the Tapjoy SDK.
@@ -70,5 +69,3 @@ TJEvent.prototype.triggerDidRequestAction = function(type, identifier, quantity)
 };
 
 module.exports = TJEvent;
-
-});
