@@ -458,6 +458,22 @@ Tapjoy.setDisplayAdSize = function(size, successCallback, failureCallback) {
         [size]);
 };
 
+/**
+ * Remove all Tapjoy content from view
+ *
+ * @param successCallback   The success callback
+ * @param failureCallback   The error callback (unused)
+ */
+Tapjoy.dismissContent = function(successCallback, failureCallback) {
+    return cordova.exec(
+        successCallback,
+        failureCallback,
+        Tapjoy.serviceName,
+        "dismissContent",
+        []);
+};
+
+
 ////////////////////////////////
 // Tapjoy Events Framework
 /////////////////////////////
