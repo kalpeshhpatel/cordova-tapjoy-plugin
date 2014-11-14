@@ -98,9 +98,12 @@ Tapjoy.setUserID = function(userID, successCallback, failureCallback) {
  * @param enable            True or false
  */
 Tapjoy.enableLogging = function(enable) {
+    var responseFunction = function(r){
+
+    }
     return cordova.exec(
-        successCallback,
-        failureCallback,
+        responseFunction,
+        responseFunction,
         Tapjoy.serviceName,
         "enableLogging",
         [enable]);
@@ -118,7 +121,7 @@ Tapjoy.enablePaidAppWithActionID = function(paidAppActionID, successCallback, fa
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
-        'enablePaidAppWithActionID',
+        "enablePaidAppWithActionID",
         [paidAppActionID]);
 };
 
@@ -231,14 +234,14 @@ Tapjoy.awardTapPoints = function(amount, successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-/*Tapjoy.getFullScreenAd = function(successCallback, failureCallback) {
+Tapjoy.getFullScreenAd = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
         "getFullScreenAd",
         []);
-};*/
+};
 
 
 /**
@@ -249,14 +252,14 @@ Tapjoy.awardTapPoints = function(amount, successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-/*Tapjoy.getFullScreenAdWithCurrencyID = function(currencyID, successCallback, failureCallback) {
+Tapjoy.getFullScreenAdWithCurrencyID = function(currencyID, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
         "getFullScreenAdWithCurrencyID",
         [currencyID]);
-};*/
+};
 
 /**
  * @deprecated Deprecated since version 10.0.0
@@ -265,14 +268,14 @@ Tapjoy.awardTapPoints = function(amount, successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-/*Tapjoy.showFullScreenAd = function(successCallback, failureCallback) {
+Tapjoy.showFullScreenAd = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
         "showFullScreenAd",
         []);
-};*/
+};
 
 
 /**
@@ -283,14 +286,14 @@ Tapjoy.awardTapPoints = function(amount, successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-/*Tapjoy.setVideoCacheCount = function(count, successCallback, failureCallback) {
+Tapjoy.setVideoCacheCount = function(count, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
         "setVideoCacheCount",
         [count]);
-};*/
+};
 
 
 /**
@@ -300,45 +303,30 @@ Tapjoy.awardTapPoints = function(amount, successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-/*Tapjoy.cacheVideos = function(successCallback, failureCallback) {
+Tapjoy.cacheVideos = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
         "cacheVideos",
         []);
-};*/
-
-/**
- * Sets the video notifier
- *
- * @param successCallback	The success callback
- * @param failureCallback	The error callback
- */
-/*Tapjoy.setVideoNotifier = function(successCallback, failureCallback) {
-    return cordova.exec(
-        successCallback,
-        failureCallback,
-        Tapjoy.serviceName,
-        'setVideoNotifier',
-        []);
-};*/
+};
 
 /**
  * @deprecated Deprecated since version 10.0.0
- * Sets the video notifier
+ * Sets the video ad delegate
  *
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-/*Tapjoy.setVideoAdDelegate = function(successCallback, failureCallback) {
+Tapjoy.setVideoAdDelegate = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
         "setVideoAdDelegate",
         []);
-};*/
+};
 
 /**
  * Sends shutdown event.
@@ -548,7 +536,7 @@ Tapjoy.enableEventAutoPresent = function(guid, autoPresent) {
 Tapjoy.createEvent = function(tjEvent, eventName, eventParameter) {
     var guid = generateGuid();
 
-    while(guid in Tapjoy.eventDict){
+    while (guid in Tapjoy.eventDict){
         guid = generateGuid();
     }
 
@@ -560,7 +548,6 @@ Tapjoy.createEvent = function(tjEvent, eventName, eventParameter) {
     var responseFunction = function(r){
 
     }
-
     return cordova.exec(
         responseFunction,
         responseFunction,
@@ -569,8 +556,7 @@ Tapjoy.createEvent = function(tjEvent, eventName, eventParameter) {
         [guid, eventName, eventParameter]);
 };
 
-Tapjoy.eventRequestCompleted = function(guid)
-{
+Tapjoy.eventRequestCompleted = function(guid) {
     var responseFunction = function(r){
 
     }
@@ -582,8 +568,7 @@ Tapjoy.eventRequestCompleted = function(guid)
         [guid]);
 };
 
-Tapjoy.eventRequestCancelled = function(guid)
-{
+Tapjoy.eventRequestCancelled = function(guid) {
     var responseFunction = function(r){
 
     }
