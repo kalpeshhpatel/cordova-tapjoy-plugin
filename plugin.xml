@@ -32,7 +32,7 @@
     </js-module>
 
     <js-module src="www/tapjoy.js" name="Tapjoy">
-        <clobbers target="navigator.Tapjoy" />
+        <clobbers target="Tapjoy" />
     </js-module>
 
     <dependency id="org.apache.cordova.device" version=">=0.2.8"/>
