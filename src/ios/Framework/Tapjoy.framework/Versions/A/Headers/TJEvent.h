@@ -229,6 +229,9 @@ typedef enum TJCEventRequestTypeEnum {
 /** Whether content has been loaded and is ready to be presented */
 @property (nonatomic, assign, readonly, getter=isContentReady) BOOL contentReady;
 
+/** When there is a fill to show - this value returns a true */
+@property (nonatomic, assign, readonly, getter=isContentAvailable) BOOL contentAvailable;
+
 /** The UIViewController to show the content in */
 @property (nonatomic, retain) UIViewController* presentationViewController;
 

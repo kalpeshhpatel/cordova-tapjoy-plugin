@@ -199,7 +199,8 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
 /**
  * The Tapjoy Ad Delegate Protocol.
  */
-@protocol TJCAdDelegate <NSObject>
+TJC_DEPRECATION_WARNING(10.2)
+@protocol TJCAdDelegate <NSObject> 
 
 @required
 
@@ -301,7 +302,7 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
  * @param deleg The class instance that implements the TJCAdDelegate protocol.
  * @return The TJCAdView object.
  */
-+ (id) getDisplayAdWithDelegate:(id <TJCAdDelegate>)deleg;
++ (id) getDisplayAdWithDelegate:(id <TJCAdDelegate>)deleg TJC_DEPRECATION_WARNING(10.2);
 
 /**
  * Initiates a URL request to get the Tapjoy Ad data.
@@ -310,21 +311,21 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
  * @param currencyID The currency ID specifies which currency to advertise in the display ad.
  * @return the TJCAdView object.
  */
-+ (id) getDisplayAdWithDelegate:(id<TJCAdDelegate>)deleg currencyID:(NSString*)currencyID;
++ (id) getDisplayAdWithDelegate:(id<TJCAdDelegate>)deleg currencyID:(NSString*)currencyID TJC_DEPRECATION_WARNING(10.2);
 
 /**
  * Indicates whether ad data has been successfully loaded.
  *
  * @return YES to indicate that the ad data has been successfully loaded, NO otherwise.
  */
-+ (BOOL) isDisplayAdLoaded;
++ (BOOL) isDisplayAdLoaded TJC_DEPRECATION_WARNING(10.2);
 
 /**
  * The Tapjoy Display Ad UIView returned by this method should be added to the current superview after an Ad has been successfully loaded.
  *
  * @return The Tapjoy Display Ad UIView.
  */
-+ (TJCAdView*) getDisplayAdView;
++ (TJCAdView*) getDisplayAdView TJC_DEPRECATION_WARNING(10.2);
 
 @end
 
