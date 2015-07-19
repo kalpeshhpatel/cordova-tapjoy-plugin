@@ -5,7 +5,7 @@
         id="org.apache.cordova.plugin.myTapjoyPlugin"
         version="1.0">
 
-    <name>Cordova Tapjoy Plugin</name>
+    <name>My Cordova Tapjoy Plugin</name>
     <description>Cordova Tapjoy plugin</description>
     <author>Kalpesh Patel</author>
     <license>GPLv2</license>
