@@ -33,10 +33,6 @@ import com.tapjoy.TapjoyNotifier;
 import com.tapjoy.TapjoySpendPointsNotifier;
 import com.tapjoy.TapjoyVideoNotifier;
 
-public void contentIsReady(TJEvent event, int status)
-{
-}
-
 @SuppressWarnings("deprecation")
 public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 {
