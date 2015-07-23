@@ -68,7 +68,6 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
 @property (nonatomic, strong) TJCUtil *util;
 @property (nonatomic, strong) TJCLog *log;
 
-
 /** 
  * This method is called to initialize the Tapjoy system and notify the server that this device is running your application.
  *
@@ -87,7 +86,16 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
  *
  * @param appID The application ID. Retrieved from the app dashboard in your Tapjoy account.
  * @param secretKey The application secret key. Retrieved from the app dashboard in your Tapjoy account.
- * @param optionsDict NSDictionary of special flags to enable non-standard settings
+ * @param options NSDictionary of special flags to enable non-standard settings. Valid key:value options:
+ *
+ * TJC_OPTION_ENABLE_LOGGING : BOOL to enable logging
+ *
+ * TJC_OPTION_USER_ID : NSString user id that must be set if your currency is not managed by Tapjoy. If you don’t have a user id on launch you can call setUserID later
+ *
+ * TJC_OPTION_DISABLE_GENERIC_ERROR_ALERT : BOOL to disable our default error dialogs
+ *
+ * TJC_OPTION_SEGMENTATION_PARAMS : NSDictionary of values used for event segmentation. See http://tech.tapjoy.com for information about valid segments
+ *
  * @return n/a
  */
 + (void)requestTapjoyConnect:(NSString*)appID secretKey:(NSString*)secretKey options:(NSDictionary*)optionsDict;
@@ -170,11 +178,19 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
 + (NSString*)getVersion;
 
 /**
- * Dissmisses both offer wall and fullscreen ads.
+ * Dismisses both offer wall and fullscreen ads.
  *
  * @return n/a
  */
 + (void)dismissContent;
+
+/**
+ * Sets a dictionary of segmentation parameters for this user
+ *
+ * @param A dictionary of parameters. See http://tech.tapjoy.com for information about valid segment names to use
+ * @return n/a
+ */
++ (void)sendSegmentationParams:(NSDictionary*)params;
 
 @end
 
@@ -183,7 +199,8 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
 /**
  * The Tapjoy Ad Delegate Protocol.
  */
-@protocol TJCAdDelegate <NSObject>
+TJC_DEPRECATION_WARNING(10.2)
+@protocol TJCAdDelegate <NSObject> 
 
 @required
 
@@ -227,6 +244,8 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
 - (void)videoAdBegan;
 
 - (void)videoAdClosed;
+
+- (void)videoAdCompleted;
 
 - (void)videoAdError:(NSString*)errorMsg;
 
@@ -283,7 +302,7 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
  * @param deleg The class instance that implements the TJCAdDelegate protocol.
  * @return The TJCAdView object.
  */
-+ (id) getDisplayAdWithDelegate:(id <TJCAdDelegate>)deleg;
++ (id) getDisplayAdWithDelegate:(id <TJCAdDelegate>)deleg TJC_DEPRECATION_WARNING(10.2);
 
 /**
  * Initiates a URL request to get the Tapjoy Ad data.
@@ -292,21 +311,21 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
  * @param currencyID The currency ID specifies which currency to advertise in the display ad.
  * @return the TJCAdView object.
  */
-+ (id) getDisplayAdWithDelegate:(id<TJCAdDelegate>)deleg currencyID:(NSString*)currencyID;
++ (id) getDisplayAdWithDelegate:(id<TJCAdDelegate>)deleg currencyID:(NSString*)currencyID TJC_DEPRECATION_WARNING(10.2);
 
 /**
  * Indicates whether ad data has been successfully loaded.
  *
  * @return YES to indicate that the ad data has been successfully loaded, NO otherwise.
  */
-+ (BOOL) isDisplayAdLoaded;
++ (BOOL) isDisplayAdLoaded TJC_DEPRECATION_WARNING(10.2);
 
 /**
  * The Tapjoy Display Ad UIView returned by this method should be added to the current superview after an Ad has been successfully loaded.
  *
  * @return The Tapjoy Display Ad UIView.
  */
-+ (TJCAdView*) getDisplayAdView;
++ (TJCAdView*) getDisplayAdView TJC_DEPRECATION_WARNING(10.2);
 
 @end
 
@@ -489,7 +508,7 @@ typedef void (^tapPointsCompletion)(NSDictionary *parameters, NSError *error);
  * @param delegate The class that implements the TJCVideoAdDelegate protocol.
  * @return n/a
  */
-+ (void)setVideoAdDelegate:(id<TJCVideoAdDelegate>)delegate TJC_DEPRECATION_WARNING(10.0);
++ (void)setVideoAdDelegate:(id<TJCVideoAdDelegate>)delegate;
 
 /**
  * Begins the caching process if auto caching is disabled.

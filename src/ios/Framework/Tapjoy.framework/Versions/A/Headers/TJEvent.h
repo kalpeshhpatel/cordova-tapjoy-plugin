@@ -105,6 +105,7 @@ typedef enum TJCEventRequestTypeEnum {
  
   - sendEventComplete:withContent: Called when an event is sent successfully
   - sendEventFail:error: Called when an error occurs while sending the event
+  - contentIsReady:Called when content for an event is successfully preloaded
   - contentWillAppear: Called when event content will appear
   - contentDidAppear: Called when event content did appear
   - contentWillDisappear: Called when event content will disappear
@@ -142,6 +143,13 @@ typedef enum TJCEventRequestTypeEnum {
  * @return n/a
  */
 - (void)sendEventFail:(TJEvent*)event error:(NSError*)error;
+
+/**
+ * Called when content for an event is successfully preloaded
+ * @param event The TJEvent that was sent
+ * @param status The status of the preloaded assets for this event. See TJCEventPreloadStatusEnum for possible values.
+ */
+- (void)contentIsReady:(TJEvent*)event withStatus:(int)status;
 
 /**
  * Called when event content will appear
@@ -214,6 +222,15 @@ typedef enum TJCEventRequestTypeEnum {
 
 /** Whether content should be shown automatically upon a successful send */
 @property (nonatomic, assign) BOOL presentAutomatically;
+
+/** Whether content should be preloaded when it is received */
+@property (nonatomic, assign) BOOL preload;
+
+/** Whether content has been loaded and is ready to be presented */
+@property (nonatomic, assign, readonly, getter=isContentReady) BOOL contentReady;
+
+/** When there is a fill to show - this value returns a true */
+@property (nonatomic, assign, readonly, getter=isContentAvailable) BOOL contentAvailable;
 
 /** The UIViewController to show the content in */
 @property (nonatomic, retain) UIViewController* presentationViewController;
