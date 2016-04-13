@@ -1,29 +1,34 @@
-// Copyright (C) 2011-2012 by Tapjoy Inc.
-//
-// This file is part of the Tapjoy SDK.
-//
-// By using the Tapjoy SDK in your software, you agree to the terms of the Tapjoy SDK License Agreement.
-//
-// The Tapjoy SDK is bound by the Tapjoy SDK License Agreement and can be found here: https://www.tapjoy.com/sdk/license
+/*
+ * Copyright (C) 2011-2012 by Tapjoy Inc.
+ *
+ * This file is part of the Tapjoy SDK.
+ *
+ * By using the Tapjoy SDK in your software, you agree to the
+ * terms of the Tapjoy SDK License Agreement.  The Tapjoy SDK
+ * is bound by the Tapjoy SDK License Agreement, found here:
+ *
+ *   https://www.tapjoy.com/sdk/license
+ */
 
+ var cordova = require('cordova'),
+     argscheck = require('cordova/argscheck'),
+     utils = require('cordova/utils'),
+     exec = require('cordova/exec');
 
-var Tapjoy = function() {
-}
+var Tapjoy = {
 
-Tapjoy = function() {
-    Tapjoy.serviceName = "TapjoyPlugin";
-    Tapjoy.eventDict = {};
+    serviceName: "TapjoyPlugin",
+    eventDict: {},
+
+    TJC_DISPLAY_AD_SIZE_320X50: "320x50",
+    TJC_DISPLAY_AD_SIZE_640X100: "640x100",
+    TJC_DISPLAY_AD_SIZE_768X90: "768x90",
+
+    // iOS settings for collection of MAC address. Use this with the TJC_OPTION_COLLECT_MAC_ADDRESS option.
+    MacAddressOptionOn: "0",                   // Enables collection of MAC address.
+    MacAddressOptionOffWithVersionCheck: "1",  // Disables collection of MAC address for iOS versions 6.0 and above.
+    MacAddressOptionOff: "2",                  // Completely disables collection of MAC address. THIS WILL EFFECTIVELY DISABLE THE SDK FOR IOS VERSIONS BELOW 6.0!
 };
-
-Tapjoy.prototype.TJC_DISPLAY_AD_SIZE_320X50 = "320x50";
-Tapjoy.prototype.TJC_DISPLAY_AD_SIZE_640X100 = "640x100";
-Tapjoy.prototype.TJC_DISPLAY_AD_SIZE_768X90	= "768x90";
-
-
-// iOS settings for collection of MAC address. Use this with the TJC_OPTION_COLLECT_MAC_ADDRESS option.
-Tapjoy.prototype.MacAddressOptionOn = "0";                      // Enables collection of MAC address.
-Tapjoy.prototype.MacAddressOptionOffWithVersionCheck = "1";     //Disables collection of MAC address for iOS versions 6.0 and above.
-Tapjoy.prototype.MacAddressOptionOff = "2";                     //Completely disables collection of MAC address. THIS WILL EFFECTIVELY DISABLE THE SDK FOR IOS VERSIONS BELOW 6.0!
 
 /**
  * Initialize Tapjoy Connect
@@ -33,7 +38,7 @@ Tapjoy.prototype.MacAddressOptionOff = "2";                     //Completely dis
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.requestTapjoyConnect = function(appID, secretKey, successCallback, failureCallback) {
+Tapjoy.requestTapjoyConnect = function(appID, secretKey, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -51,7 +56,7 @@ Tapjoy.prototype.requestTapjoyConnect = function(appID, secretKey, successCallba
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.requestTapjoyConnectWithFlags = function(appID, secretKey, flags, successCallback, failureCallback) {
+Tapjoy.requestTapjoyConnectWithFlags = function(appID, secretKey, flags, successCallback, failureCallback) {
     // Populate the hashtable.
     for (var name in flags) {
         cordova.exec(
@@ -78,7 +83,7 @@ Tapjoy.prototype.requestTapjoyConnectWithFlags = function(appID, secretKey, flag
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.setUserID = function(userID, successCallback, failureCallback) {
+Tapjoy.setUserID = function(userID, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -88,18 +93,35 @@ Tapjoy.prototype.setUserID = function(userID, successCallback, failureCallback) 
 };
 
 /**
+ * Enable Tapjoy SDK logging to the console
+ *
+ * @param enable            True or false
+ */
+Tapjoy.enableLogging = function(enable) {
+    var responseFunction = function(r){
+
+    }
+    return cordova.exec(
+        responseFunction,
+        responseFunction,
+        Tapjoy.serviceName,
+        "enableLogging",
+        [enable]);
+};
+
+/**
  * Use for advertising your app if it is a Paid App.  Call after requestTapjoyConnect.
  *
  * @param paidAppActionID	The Tapjoy Paid App Action ID for this offer.
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.enablePaidAppWithActionID = function(paidAppActionID, successCallback, failureCallback) {
+Tapjoy.enablePaidAppWithActionID = function(paidAppActionID, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
         Tapjoy.serviceName,
-        'enablePaidAppWithActionID',
+        "enablePaidAppWithActionID",
         [paidAppActionID]);
 };
 
@@ -111,7 +133,7 @@ Tapjoy.prototype.enablePaidAppWithActionID = function(paidAppActionID, successCa
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.actionComplete = function(actionID, successCallback, failureCallback) {
+Tapjoy.actionComplete = function(actionID, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -127,7 +149,7 @@ Tapjoy.prototype.actionComplete = function(actionID, successCallback, failureCal
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.showOffers = function(successCallback, failureCallback) {
+Tapjoy.showOffers = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -145,7 +167,7 @@ Tapjoy.prototype.showOffers = function(successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.showOffersWithCurrencyID = function(currencyID, selector, successCallback, failureCallback) {
+Tapjoy.showOffersWithCurrencyID = function(currencyID, selector, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -161,7 +183,7 @@ Tapjoy.prototype.showOffersWithCurrencyID = function(currencyID, selector, succe
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.getTapPoints = function(successCallback, failureCallback) {
+Tapjoy.getTapPoints = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -178,7 +200,7 @@ Tapjoy.prototype.getTapPoints = function(successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.spendTapPoints = function(amount, successCallback, failureCallback) {
+Tapjoy.spendTapPoints = function(amount, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -195,7 +217,7 @@ Tapjoy.prototype.spendTapPoints = function(amount, successCallback, failureCallb
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.awardTapPoints = function(amount, successCallback, failureCallback) {
+Tapjoy.awardTapPoints = function(amount, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -212,7 +234,7 @@ Tapjoy.prototype.awardTapPoints = function(amount, successCallback, failureCallb
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.getFullScreenAd = function(successCallback, failureCallback) {
+Tapjoy.getFullScreenAd = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -230,7 +252,7 @@ Tapjoy.prototype.getFullScreenAd = function(successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.getFullScreenAdWithCurrencyID = function(currencyID, successCallback, failureCallback) {
+Tapjoy.getFullScreenAdWithCurrencyID = function(currencyID, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -246,7 +268,7 @@ Tapjoy.prototype.getFullScreenAdWithCurrencyID = function(currencyID, successCal
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.showFullScreenAd = function(successCallback, failureCallback) {
+Tapjoy.showFullScreenAd = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -264,7 +286,7 @@ Tapjoy.prototype.showFullScreenAd = function(successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.setVideoCacheCount = function(count, successCallback, failureCallback) {
+Tapjoy.setVideoCacheCount = function(count, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -281,7 +303,7 @@ Tapjoy.prototype.setVideoCacheCount = function(count, successCallback, failureCa
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.cacheVideos = function(successCallback, failureCallback) {
+Tapjoy.cacheVideos = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -291,28 +313,13 @@ Tapjoy.prototype.cacheVideos = function(successCallback, failureCallback) {
 };
 
 /**
- * Sets the video notifier
- *
- * @param successCallback	The success callback
- * @param failureCallback	The error callback
- */
-Tapjoy.prototype.setVideoNotifier = function(successCallback, failureCallback) {
-    return cordova.exec(
-        successCallback,
-        failureCallback,
-        Tapjoy.serviceName,
-        'setVideoNotifier',
-        []);
-};
-
-/**
  * @deprecated Deprecated since version 10.0.0
- * Sets the video notifier
+ * Sets the video ad delegate
  *
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.setVideoAdDelegate = function(successCallback, failureCallback) {
+Tapjoy.setVideoAdDelegate = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -327,7 +334,7 @@ Tapjoy.prototype.setVideoAdDelegate = function(successCallback, failureCallback)
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.sendShutDownEvent = function(successCallback, failureCallback) {
+Tapjoy.sendShutDownEvent = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -347,7 +354,7 @@ Tapjoy.prototype.sendShutDownEvent = function(successCallback, failureCallback) 
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.sendIAPEvent = function(name, price, quantity, currencyCode, successCallback, failureCallback) {
+Tapjoy.sendIAPEvent = function(name, price, quantity, currencyCode, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -363,7 +370,7 @@ Tapjoy.prototype.sendIAPEvent = function(name, price, quantity, currencyCode, su
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.getDisplayAd = function(successCallback, failureCallback) {
+Tapjoy.getDisplayAd = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -378,7 +385,7 @@ Tapjoy.prototype.getDisplayAd = function(successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.showDisplayAd = function(successCallback, failureCallback) {
+Tapjoy.showDisplayAd = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -393,7 +400,7 @@ Tapjoy.prototype.showDisplayAd = function(successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.hideDisplayAd = function(successCallback, failureCallback) {
+Tapjoy.hideDisplayAd = function(successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -409,7 +416,7 @@ Tapjoy.prototype.hideDisplayAd = function(successCallback, failureCallback) {
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.enableDisplayAdAutoRefresh = function(enable, successCallback, failureCallback) {
+Tapjoy.enableDisplayAdAutoRefresh = function(enable, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -426,7 +433,7 @@ Tapjoy.prototype.enableDisplayAdAutoRefresh = function(enable, successCallback, 
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.moveDisplayAd = function(x, y, successCallback, failureCallback) {
+Tapjoy.moveDisplayAd = function(x, y, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -442,7 +449,7 @@ Tapjoy.prototype.moveDisplayAd = function(x, y, successCallback, failureCallback
  * @param successCallback	The success callback
  * @param failureCallback	The error callback
  */
-Tapjoy.prototype.setDisplayAdSize= function(size, successCallback, failureCallback) {
+Tapjoy.setDisplayAdSize = function(size, successCallback, failureCallback) {
     return cordova.exec(
         successCallback,
         failureCallback,
@@ -451,41 +458,58 @@ Tapjoy.prototype.setDisplayAdSize= function(size, successCallback, failureCallba
         [size]);
 };
 
-///// Tapjoy Events Framework implementation
+/**
+ * Remove all Tapjoy content from view
+ *
+ * @param successCallback   The success callback
+ * @param failureCallback   The error callback (unused)
+ */
+Tapjoy.dismissContent = function(successCallback, failureCallback) {
+    return cordova.exec(
+        successCallback,
+        failureCallback,
+        Tapjoy.serviceName,
+        "dismissContent",
+        []);
+};
+
+
+////////////////////////////////
+// Tapjoy Events Framework
+/////////////////////////////
 
 Tapjoy.sendEventCompleteWithContent = function(guid) {
     if (guid in Tapjoy.eventDict){
         Tapjoy.eventDict[guid].triggerSendEventSucceeded(true);
     }
-
 };
 
 Tapjoy.sendEventComplete = function(guid) {
-    if(guid in Tapjoy.eventDict){
+    if (guid in Tapjoy.eventDict){
         Tapjoy.eventDict[guid].triggerSendEventSucceeded(false);
     }
 };
 
 Tapjoy.sendEventFail = function(guid, errorMsg) {
-    if(guid in Tapjoy.eventDict){
+    if (guid in Tapjoy.eventDict){
         Tapjoy.eventDict[guid].triggerSendEventFailed(errorMsg);
     }
 };
 
 Tapjoy.eventContentDidAppear = function(guid) {
-    if(guid in Tapjoy.eventDict){
+    if (guid in Tapjoy.eventDict){
         Tapjoy.eventDict[guid].triggerContentDidAppear();
     }
 };
 
 Tapjoy.eventContentDidDisappear = function(guid) {
-    if(guid in Tapjoy.eventDict){
+    if (guid in Tapjoy.eventDict){
         Tapjoy.eventDict[guid].triggerContentDidDisappear();
     }
 };
 
 Tapjoy.eventDidRequestAction = function(guid, type, identifier, quantity) {
-    if(guid in Tapjoy.eventDict){
+    if (guid in Tapjoy.eventDict){
         Tapjoy.eventDict[guid].triggerDidRequestAction(type, identifier, quantity);
     }
 };
@@ -528,7 +552,7 @@ Tapjoy.enableEventAutoPresent = function(guid, autoPresent) {
 Tapjoy.createEvent = function(tjEvent, eventName, eventParameter) {
     var guid = generateGuid();
 
-    while(guid in Tapjoy.eventDict){
+    while (guid in Tapjoy.eventDict){
         guid = generateGuid();
     }
 
@@ -540,7 +564,6 @@ Tapjoy.createEvent = function(tjEvent, eventName, eventParameter) {
     var responseFunction = function(r){
 
     }
-
     return cordova.exec(
         responseFunction,
         responseFunction,
@@ -549,8 +572,7 @@ Tapjoy.createEvent = function(tjEvent, eventName, eventParameter) {
         [guid, eventName, eventParameter]);
 };
 
-Tapjoy.eventRequestCompleted = function(guid)
-{
+Tapjoy.eventRequestCompleted = function(guid) {
     var responseFunction = function(r){
 
     }
@@ -562,8 +584,7 @@ Tapjoy.eventRequestCompleted = function(guid)
         [guid]);
 };
 
-Tapjoy.eventRequestCancelled = function(guid)
-{
+Tapjoy.eventRequestCancelled = function(guid) {
     var responseFunction = function(r){
 
     }
@@ -575,156 +596,10 @@ Tapjoy.eventRequestCancelled = function(guid)
         [guid]);
 };
 
-/////////////////////////////
-// TJEvent
-/////////////////////////////
-
-/**
- * Creates a new instance of TJEvent
- *
- * @param eventName				The name of the event
- * @param eventParameter		String that specifies the additional event value
- * @param eventCallback			An instance of TJEventCallback
- */
-var TJEvent = function(eventName, eventParameter, eventCallback) {
-    this.eventName = eventName;
-    this.eventParameter = eventParameter;
-    this.eventCallback = eventCallback;
-
-    Tapjoy.createEvent(this, eventName, eventParameter);
-};
-
-/**
- * Sends the event to the server
- */
-TJEvent.prototype.send = function(){
-    Tapjoy.sendEvent(this.guid);
-};
-
-/**
- * Shows the content that was received from the server after sending this event
- */
-TJEvent.prototype.show = function(){
-    Tapjoy.showEvent(this.guid);
-};
-
-TJEvent.prototype.enableAutoPresent = function(autoPresent) {
-    Tapjoy.enableEventAutoPresent(this.guid, autoPresent);
-};
-
-TJEvent.prototype.triggerSendEventSucceeded = function(contentIsAvailable){
-    this.eventCallback.sendEventSucceeded(this, contentIsAvailable);
-};
-
-TJEvent.prototype.triggerSendEventFailed = function(errorMsg){
-    this.eventCallback.sendEventFailed(this, errorMsg);
-};
-
-TJEvent.prototype.triggerContentDidAppear = function(){
-    this.eventCallback.contentDidAppear(this);
-};
-
-TJEvent.prototype.triggerContentDidDisappear = function(){
-    this.eventCallback.contentDidDisappear(this);
-};
-
-TJEvent.prototype.triggerDidRequestAction = function(type, identifier, quantity){
-    var eventRequest = new TJEventRequest(this.guid, type, identifier, quantity);
-
-    this.eventCallback.didRequestAction(this, eventRequest);
-};
 
 /////////////////////////////
-// TJEventCallback
+// Utilities
 /////////////////////////////
-
-/**
- * Class that handles the responses received upon sending a TJEvent
- *
- * @param eventSuccessFunction 			A function that will be called when the event is sent successfully.
- * @param eventFailedFunction 			A function that will be called when an error occurs while sending the event
- */
-var TJEventCallback = function(eventSuccessFunction, eventFailedFunction, contentDidAppearFunction, contentDidDisappearFunction, didRequestActionFunction) {
-    this.eventSuccessFunction = eventSuccessFunction;
-    this.eventFailedFunction = eventFailedFunction;
-    this.contentDidAppearFunction = contentDidAppearFunction;
-    this.contentDidDisappearFunction = contentDidDisappearFunction;
-    this.didRequestActionFunction = didRequestActionFunction;
-};
-
-/**
- * Called when the event is sent successfully
- *
- * @param tjEvent				The TJEvent that was sent
- * @param contentIsAvailable	true if content is available, otherwise false
- */
-TJEventCallback.prototype.sendEventSucceeded = function(tjEvent, contentIsAvailable) {
-    this.eventSuccessFunction(tjEvent, contentIsAvailable);
-};
-
-/**
- * Called when an error occurs while sending the event
- *
- * @param tjEvent				The TJEvent that was sent
- * @param errorMsg				The error that occurred
- */
-TJEventCallback.prototype.sendEventFailed = function(tjEvent, errorMsg) {
-    this.eventFailedFunction(tjEvent, errorMsg);
-};
-
-/**
- * Called when content has been shown
- *
- * @param tjEvent       The TJEvent that was sent
- */
-TJEventCallback.prototype.contentDidAppear = function(tjEvent) {
-    this.contentDidAppearFunction(tjEvent);
-};
-
-/**
- * Called when content has been dismissed
- *
- * @param tjEvent       The TJEvent that was sent
- */
-TJEventCallback.prototype.contentDidDisappear = function(tjEvent) {
-    this.contentDidDisappearFunction(tjEvent);
-};
-
-/**
- * Called when an action is requested of your app
- *
- * @param tjEvent         The TJEvent that was sent
- * @param tjEventRequest  The TJEventRequest object describing the request
- */
-TJEventCallback.prototype.didRequestAction = function(tjEvent, tjEventRequest) {
-    this.didRequestActionFunction(tjEvent, tjEventRequest);
-};
-
-/////////////////////////////
-// TJEventRequest
-/////////////////////////////
-
-var TJEventRequest = function(guid, type, identifier, quantity) {
-    this.guid = guid;
-    this.type = type;
-    this.identifier = identifier;
-    this.quantity = quantity;
-};
-
-TJEventRequest.TYPE_IN_APP_PURHCASE = 1;
-TJEventRequest.TYPE_VIRTUAL_GOOD = 2;
-TJEventRequest.TYPE_CURRENCY = 3;
-TJEventRequest.TYPE_NAVIGATION = 4;
-
-TJEventRequest.prototype.eventRequestCompleted = function() {
-    Tapjoy.eventRequestCompleted(this.guid);
-};
-
-TJEventRequest.prototype.eventRequestCancelled = function() {
-    Tapjoy.eventRequestCancelled(this.guid);
-}
-
-// Utility functions
 
 function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -737,13 +612,18 @@ function generateGuid() {
         s4() + '-' + s4() + s4() + s4();
 }
 
-if(!window.plugins) {
+
+/////////////////////////////
+// Exports
+/////////////////////////////
+
+/*if(!window.plugins) {
     window.plugins = {};
 }
 if (!window.plugins.Tapjoy) {
-    window.plugins.Tapjoy = new Tapjoy();
-}
+    window.plugins.Tapjoy = Tapjoy;
+}*/
 
 if (module.exports) {
-    module.exports = new Tapjoy();
+    module.exports = Tapjoy;
 }

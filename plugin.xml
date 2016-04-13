@@ -3,10 +3,10 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="org.apache.cordova.plugin.TapjoyPlugin"
-        version="1.0">
+        version="2.0">
 
     <name>Cordova Tapjoy Plugin</name>
-    <description>Cordova Tapjoy plugin</description>
+    <description>Cordova plugin wrapping Tapjoy SDK v10</description>
     <author>Kalpesh Patel</author>
     <license>GPLv2</license>
     <keywords>cordova,tapjoy,monetization</keywords>
@@ -19,7 +19,19 @@
         <clobbers target="Tapjoy" />
     </js-module>
 
-    <dependency id="org.apache.cordova.device" version=">=0.2.8"/>
+    <js-module src="www/TJEvent.js" name="TJEvent">
+        <clobbers target="TJEvent" />
+    </js-module>
+
+    <js-module src="www/TJEventDelegate.js" name="TJEventDelegate">
+        <clobbers target="TJEventDelegate" />
+    </js-module>
+
+    <js-module src="www/TJEventRequest.js" name="TJEventRequest">
+        <clobbers target="TJEventRequest" />
+    </js-module>
+
+    <dependency id="cordova-plugin-device" version=">=1.1.0"/>
 
     <!-- android -->
     <platform name="android">
@@ -31,11 +43,6 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
-            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
@@ -61,48 +68,32 @@
             </feature>
         </config-file>
 
-        <source-file src="src/ios/TapjoyPlugin.m" />
-        <source-file src="src/ios/TapjoyEventPlugin.m" />
-
         <header-file src="src/ios/TapjoyPlugin.h" />
-        <header-file src="src/ios/TapjoyEventPlugin.h" />
+        <source-file src="src/ios/TapjoyPlugin.m" />
+        <header-file src="src/ios/TapjoyEventDelegate.h" />
+        <source-file src="src/ios/TapjoyEventDelegate.m" />
 
         <resource-file src="src/ios/Framework/Tapjoy.framework/Resources/TapjoyResources.bundle" />
         <framework src="src/ios/Framework/Tapjoy.framework" custom="true"/>
-        <framework src="Security.framework"/>
-        <framework src="CoreData.framework" />
+        <framework src="AdSupport.framework" />
+        <framework src="CFNetwork.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="CoreLocation.framework" />
+        <framework src="CoreMotion.framework" />
+        <framework src="CoreTelephony.framework" />
         <framework src="EventKit.framework" />
         <framework src="EventKitUI.framework"/>
-        <framework src="libsqlite3.0.dylib" />
-        <framework src="libxml2.dylib"/>
-        <framework src="libz.dylib"/>
-        <framework src="MapKit.framework" />
-        <framework src="MessageUI.framework"/>
-        <framework src="Social.framework" weak="true"/>
-        <framework src="StoreKit.framework" weak="true"/>
-        <framework src="Twitter.framework" weak="true"/>
-        <framework src="CoreTelephony.framework" weak="true"/>
-        <framework src="CoreMotion.framework"/>
-        <framework src="AdSupport.framework" weak="true"/>
-        <framework src="CoreLocation.framework" />
-        <framework src="ImageIO.framework"/>
-        <framework src="OpenAL.framework" />
-        <framework src="AssetsLibrary.framework" />
-        <framework src="UIKit.framework" weak="true"/>
         <framework src="Foundation.framework" />
-        <framework src="CoreGraphics.framework" />
-        <framework src="AddressBook.framework" />
-        <framework src="AddressBookUI.framework" />
-        <framework src="AudioToolbox.framework" />
-        <framework src="AVFoundation.framework" weak="true"/>
-        <framework src="CFNetwork.framework" />
-        <framework src="CoreLocation.framework" />
+        <framework src="MapKit.framework" />
         <framework src="MediaPlayer.framework" />
+        <framework src="MessageUI.framework" />
+        <framework src="MobileCoreServices.framework" />
         <framework src="QuartzCore.framework" />
+        <framework src="StoreKit.framework"/>
+        <framework src="Social.framework" weak="true"/>
         <framework src="SystemConfiguration.framework" />
-        <framework src="MobileCoreServices.framework"/>
-        <framework src="CoreMedia.framework" weak="true"/>
-
+        <framework src="Twitter.framework"/>
+        <framework src="UIKit.framework" />
     </platform>
 
 </plugin>

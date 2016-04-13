@@ -34,7 +34,7 @@ import com.tapjoy.TapjoySpendPointsNotifier;
 import com.tapjoy.TapjoyVideoNotifier;
 
 @SuppressWarnings("deprecation")
-public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
+public abstract class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 {
 	public static final String TAG = "TapjoyPhoneGap";
 	
