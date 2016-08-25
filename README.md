@@ -1,7 +1,7 @@
 Cordova Tapjoy Plugin
 ==========
 
-### THIS PLUGIN IS NO LONGER MAINTAINED
+# THIS PLUGIN IS NO LONGER MAINTAINED
 
 
 This is phonegap/cordova plugin for integrating [Tapjoy](https://www.tapjoy.com) ad provider in cordova based applications. 
