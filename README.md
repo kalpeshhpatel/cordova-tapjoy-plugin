@@ -14,6 +14,8 @@ Installation
 ----------
 Install the plugin by running following command from your terminal. (Make sure you are at the root of your cordova project.)
 
+Added support for TJ 10.2.2
+
 ```
 cordova plugin add  https://github.com/kalpeshhpatel/cordova-tapjoy-plugin.git
 ```

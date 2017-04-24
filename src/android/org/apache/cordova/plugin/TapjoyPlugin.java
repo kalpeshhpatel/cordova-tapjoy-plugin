@@ -33,6 +33,8 @@ import com.tapjoy.TapjoyNotifier;
 import com.tapjoy.TapjoySpendPointsNotifier;
 import com.tapjoy.TapjoyVideoNotifier;
 
+
+
 @SuppressWarnings("deprecation")
 public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 {
@@ -579,7 +581,9 @@ public class TapjoyPlugin extends CordovaPlugin implements TJEventCallback
 		TapjoyLog.i(TAG, "contentDidDisappear");
 		webView.sendJavascript("Tapjoy.eventContentDidDisappear('" + guidMap.get(event.getGUID()) + "');");
 	}
-
+	public void contentIsReady(TJEvent event, int status)
+	{
+	}
 	public void didRequestAction(TJEvent event, TJEventRequest request)
 	{
 		TapjoyLog.i(TAG, "didRequestAction");
